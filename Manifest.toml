@@ -1,0 +1,10 @@
+# This file is machine-generated - editing it directly is not advised
+
+julia_version = "1.12.4"
+manifest_format = "2.0"
+project_hash = "b82edc427b703719c36bd13e104a6dda1baef13b"
+
+[[deps.Grok]]
+path = "."
+uuid = "741f94ce-7c44-4664-a236-7dbfa09f3eda"
+version = "0.1.0"
