@@ -1,3 +1,6 @@
 [submodule "Grokking-Deep-Learning"]
 	path = Book
 	url = https://github.com/iamtrask/Grokking-Deep-Learning
+[submodule "BookJuliaPort"]
+	path = BookJuliaPort
+	url = git@github.com:deepaksuresh/Grokking-Deep-Learning-with-Julia.git
