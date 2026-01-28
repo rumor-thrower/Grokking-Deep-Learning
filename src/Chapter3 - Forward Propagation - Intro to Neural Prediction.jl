@@ -79,11 +79,8 @@ md"""
 """
 
 # ╔═╡ 2045b84b-a693-44f1-a53e-cba38d2bd95f
-function neural_network(input::Vector{F}, weights::Array{F,3}) where F<:AbstractFloat
-	hid = vect_mat_mul(input, weights[:, :, 1]) # prediction
-	pred = vect_mat_mul(hid, weights[:, :, 2]) # prediction
-	return pred
-end
+neural_network(input::Vector{F}, weights::Array{F,3}) where F<:AbstractFloat =
+	reduce(vect_mat_mul, copy.(eachslice(weights, dims=3)), init=input)
 
 # ╔═╡ 6e21e0ee-69fc-4398-a6dc-a812b4f4a209
 # How we use the network to predict something:
