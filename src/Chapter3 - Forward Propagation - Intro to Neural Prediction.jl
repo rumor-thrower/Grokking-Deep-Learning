@@ -40,6 +40,26 @@ w_sum::Function = LinearAlgebra.dot
 neural_network(input::Vector{F}, weights::Vector{F}) where F<:AbstractFloat =
 	w_sum(input, weights) # prediction
 
+# ╔═╡ 3ad5a0e1-ad53-4a95-8029-5baea15e2548
+md"""
+# Making a Prediction with Multiple Outputs
+"""
+
+# ╔═╡ 2c6af106-1583-48f1-95f6-3d0c66cee5a4
+# Instead of predicting just 
+# whether the team won or lost, 
+# now we're also predicting whether
+# they are happy/sad AND the percentage
+# of the team that is hurt. We are
+# making this prediction using only
+# the current win/loss record.
+
+ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
+
+# ╔═╡ 3e9fd101-c355-4d60-b8d8-eae502360e70
+neural_network(input::F, weights::Vector{F}) where F<:AbstractFloat =
+	ele_mul(input, weights) # prediction
+
 # ╔═╡ 6e21e0ee-69fc-4398-a6dc-a812b4f4a209
 # How we use the network to predict something:
 
@@ -71,26 +91,6 @@ let
 	pred = neural_network(input, [0.1, 0.2, 0])
 	@assert pred ≈ 0.98
 end
-
-# ╔═╡ 3ad5a0e1-ad53-4a95-8029-5baea15e2548
-md"""
-# Making a Prediction with Multiple Outputs
-"""
-
-# ╔═╡ 2c6af106-1583-48f1-95f6-3d0c66cee5a4
-# Instead of predicting just 
-# whether the team won or lost, 
-# now we're also predicting whether
-# they are happy/sad AND the percentage
-# of the team that is hurt. We are
-# making this prediction using only
-# the current win/loss record.
-
-ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
-
-# ╔═╡ 3e9fd101-c355-4d60-b8d8-eae502360e70
-neural_network(input::F, weights::Vector{F}) where F<:AbstractFloat =
-	ele_mul(input, weights) # prediction
 
 # ╔═╡ 8f5e4f4b-af14-4834-a50e-59f86e6fa715
 let
