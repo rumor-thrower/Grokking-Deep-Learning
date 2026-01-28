@@ -54,6 +54,28 @@ let
 	@assert pred ≈ 0.85
 end
 
+# ╔═╡ 2ddf7d1b-cb29-4b75-9681-4fa50d87eec7
+let
+	# This dataset is the current
+	# status at the beginning of
+	# each game for the first 4 games
+	# in a season.
+	
+	# toes = current number of toes
+	# wlrec = current games won (percent)
+	# nfans = fan count (in millions)
+	
+	toes =  [8.5, 9.5, 9.9, 9.0]
+	wlrec = [0.65, 0.8, 0.8, 0.9]
+	nfans = [1.2, 1.3, 0.5, 1.0]
+	
+	# Input corresponds to every entry
+	# for the first game of the season.
+	input = [toes[begin], wlrec[begin], nfans[begin]]
+	pred = neural_network(input)
+	@assert pred ≈ 0.98
+end
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -79,5 +101,6 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╟─65889eb3-1e2b-45e0-9b8d-0ce244d20283
 # ╠═d53a4bff-8535-4481-98fe-c0b4489e5c61
 # ╠═8105e6f0-4aee-4d18-a644-1ed4c33503b7
+# ╠═2ddf7d1b-cb29-4b75-9681-4fa50d87eec7
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
