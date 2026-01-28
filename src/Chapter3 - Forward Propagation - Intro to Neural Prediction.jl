@@ -39,6 +39,16 @@ md"""
 ## Complete Runnable Code
 """
 
+# ╔═╡ d53a4bff-8535-4481-98fe-c0b4489e5c61
+function w_sum(a::Vector{N}, b::Vector{N}) where N<:Int
+	@assert length(a) == length(b)
+	output = zero(N)
+	map(1:length(a)) do i
+		output += a[i] * b[i]
+	end
+	return output
+end
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -62,5 +72,6 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╠═6e21e0ee-69fc-4398-a6dc-a812b4f4a209
 # ╟─1649a784-2ec8-42fa-8a11-01259cb05b58
 # ╟─65889eb3-1e2b-45e0-9b8d-0ce244d20283
+# ╠═d53a4bff-8535-4481-98fe-c0b4489e5c61
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
