@@ -10,7 +10,15 @@ md"""
 """
 
 # ╔═╡ 0961c6f5-a925-4744-93e5-9f0665f68852
-
+let
+	knob_weight = 0.5
+	input = 0.5
+	goal_pred = 0.8
+	
+	pred = input * knob_weight
+	error = (pred - goal_pred) ^ 2
+	@assert error ≈ 0.3025
+end
 
 # ╔═╡ 11166a19-00b7-4dd1-a7fe-4113f2b2b80c
 md"""
