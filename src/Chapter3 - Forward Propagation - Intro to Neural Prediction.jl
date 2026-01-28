@@ -29,6 +29,16 @@ let
 	@assert pred ≈ 0.85
 end
 
+# ╔═╡ 1649a784-2ec8-42fa-8a11-01259cb05b58
+md"""
+# Making a Prediction with Multiple Inputs
+"""
+
+# ╔═╡ 65889eb3-1e2b-45e0-9b8d-0ce244d20283
+md"""
+## Complete Runnable Code
+"""
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -50,5 +60,7 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╟─d0848d84-8c0b-4a83-9cb9-56b834a42559
 # ╠═7ffdc80b-8c54-46b9-a485-643822b3d435
 # ╠═6e21e0ee-69fc-4398-a6dc-a812b4f4a209
+# ╟─1649a784-2ec8-42fa-8a11-01259cb05b58
+# ╟─65889eb3-1e2b-45e0-9b8d-0ce244d20283
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
