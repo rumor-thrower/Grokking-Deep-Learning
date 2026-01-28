@@ -17,7 +17,8 @@ md"""
 # ╔═╡ 7ffdc80b-8c54-46b9-a485-643822b3d435
 # The network:
 
-neural_network(input, weight = 0.1) = input * weight # prediction
+neural_network(input::N, weight::F = 0.1) where {N<:Real, F<:AbstractFloat} =
+	input * weight # prediction
 
 # ╔═╡ 1649a784-2ec8-42fa-8a11-01259cb05b58
 md"""
@@ -30,7 +31,7 @@ md"""
 """
 
 # ╔═╡ d53a4bff-8535-4481-98fe-c0b4489e5c61
-function w_sum(a::Vector{N}, b::Vector{N}) where N<:Int
+function w_sum(a::Vector{N}, b::Vector{N}) where N<:Real
 	@assert length(a) == length(b)
 	output = zero(N)
 	map(1:length(a)) do i
@@ -40,7 +41,8 @@ function w_sum(a::Vector{N}, b::Vector{N}) where N<:Int
 end
 
 # ╔═╡ 8105e6f0-4aee-4d18-a644-1ed4c33503b7
-neural_network(input, weights = [0.1, 0.2, 0]) = w_sum(input, weights) # prediction
+neural_network(input::Vector{F}, weights::Vector{F} = [0.1, 0.2, 0]) where F<:AbstractFloat =
+	w_sum(input, weights) # prediction
 
 # ╔═╡ 6e21e0ee-69fc-4398-a6dc-a812b4f4a209
 # How we use the network to predict something:
