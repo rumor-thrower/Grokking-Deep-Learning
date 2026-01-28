@@ -86,6 +86,14 @@ md"""
 # making this prediction using only
 # the current win/loss record.
 
+function ele_mul(number,vector)
+	output = similar(vector)
+	map(1:length(vector)) do i
+		output[i] = number * vector[i]
+	end
+	return output
+end
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
