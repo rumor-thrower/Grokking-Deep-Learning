@@ -35,6 +35,23 @@ md"""
 
 neural_network(input::F, weight::F) where F<:AbstractFloat = input * weight # predict
 
+# ╔═╡ 30a38ca9-8041-4ca8-bccc-cb96475d1502
+# 2) PREDICT: Making A Prediction And Evaluating Error
+
+let
+	number_of_toes = [8.5]
+	win_or_lose_binary = [1] #(won!!!)
+	
+	input = number_of_toes[begin]
+	weight = 0.1
+
+	label = win_or_lose_binary[begin]
+	
+	pred = neural_network(input, weight)
+	error = (pred - label) ^ 2
+	@assert error ≈ 0.0225
+end
+
 # ╔═╡ 87a9eac4-089f-42d6-a184-c71950fa4e1b
 md"""
 # Hot and Cold Learning
@@ -121,6 +138,7 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╟─11166a19-00b7-4dd1-a7fe-4113f2b2b80c
 # ╟─515ceacb-b7b9-48ff-9f89-d47cb1682ad1
 # ╠═73f71bf4-2a55-446f-8480-82c524452d96
+# ╠═30a38ca9-8041-4ca8-bccc-cb96475d1502
 # ╟─87a9eac4-089f-42d6-a184-c71950fa4e1b
 # ╠═4c1b81b9-45a1-463c-9e71-a6a45fc97a7a
 # ╟─212f2d35-a435-41f3-bd99-ee8e57f43851
