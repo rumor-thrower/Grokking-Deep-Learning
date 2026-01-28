@@ -106,14 +106,8 @@ md"""
 """
 
 # ╔═╡ 20b229f1-0a9c-4026-a82d-19dbaeca0338
-function vect_mat_mul(vect::Vector{F}, matrix::Matrix{F}) where F<:AbstractFloat
-	@assert length(vect) == size(matrix, 2)
-	output = similar(vect)
-	map(1:length(vect)) do i
-		output[i] = w_sum(vect, matrix[i, :])
-	end
-	return output
-end
+vect_mat_mul(vect::Vector{F}, matrix::Matrix{F}) where F<:AbstractFloat =
+	matrix * vect
 
 # ╔═╡ 026a1125-9056-4fe4-a65b-0934069caf26
 neural_network(input::Vector{F}, weights::Matrix{F}) where F<:AbstractFloat =
