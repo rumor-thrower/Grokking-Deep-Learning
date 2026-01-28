@@ -17,7 +17,7 @@ md"""
 # ╔═╡ 7ffdc80b-8c54-46b9-a485-643822b3d435
 # The network:
 
-neural_network(input::N, weight::F = 0.1) where {N<:Number, F<:AbstractFloat} =
+neural_network(input::N, weight::F = 0.1) where {N<:Real, F<:AbstractFloat} =
 	input * weight # prediction
 
 # ╔═╡ 6e21e0ee-69fc-4398-a6dc-a812b4f4a209
@@ -41,7 +41,7 @@ md"""
 """
 
 # ╔═╡ d53a4bff-8535-4481-98fe-c0b4489e5c61
-function w_sum(a::Vector{N}, b::Vector{N}) where N<:Int
+function w_sum(a::Vector{N}, b::Vector{N}) where N<:Real
 	@assert length(a) == length(b)
 	output = zero(N)
 	map(1:length(a)) do i
