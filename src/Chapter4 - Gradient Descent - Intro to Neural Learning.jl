@@ -127,7 +127,45 @@ md"""
 """
 
 # ╔═╡ 11a75675-fd2e-4d6b-86d4-6c11b9766552
+# 1) An Empty Network
 
+@assert hasmethod(neural_network, Tuple{Float64, Float64})
+
+# ╔═╡ 722cb92d-54cf-4aa6-b3ce-27f90f59dafb
+function gradient_descent_epoch(weight, alpha) # α fixed before training
+	
+	# 2) PREDICT: Making A Prediction And Evaluating Error
+	
+	number_of_toes = [8.5]
+	win_or_lose_binary = [1] # (won!!!)
+	
+	input = number_of_toes[begin]
+	goal_pred = win_or_lose_binary[begin]
+	
+	pred = neural_network(input, weight)
+	error = (pred - goal_pred) ^ 2
+	
+	# 3) COMPARE: Calculating "Node Delta" and Putting it on the Output Node
+	
+	delta = pred - goal_pred
+	
+	# 4) LEARN: Calculating "Weight Delta" and Putting it on the Weight
+	
+	weight_delta = input * delta
+	
+	# 5) LEARN: Updating the Weight
+	
+	weight -= weight_delta * alpha
+end
+
+# ╔═╡ f85e8765-ffdd-448e-8e7d-be041ee3b4b4
+let weight = 0.1
+	alpha = 0.01
+
+	weight_after = gradient_descent_epoch(weight, alpha)
+
+	@info "Weight before/after single iteration:" weight weight_after
+end
 
 # ╔═╡ 8e8c38cc-a228-41ed-a55e-6623508234f7
 md"""
@@ -200,6 +238,8 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╠═c1126792-5041-439b-b278-38bd66994d03
 # ╟─5872d389-8337-451b-8805-1813f5b3cad6
 # ╠═11a75675-fd2e-4d6b-86d4-6c11b9766552
+# ╠═722cb92d-54cf-4aa6-b3ce-27f90f59dafb
+# ╠═f85e8765-ffdd-448e-8e7d-be041ee3b4b4
 # ╟─8e8c38cc-a228-41ed-a55e-6623508234f7
 # ╠═07f42bd6-f9d4-4d6e-8ac9-a9ed80ab3094
 # ╟─6e717e49-d4bc-4627-b0fd-85f61254b9cc
