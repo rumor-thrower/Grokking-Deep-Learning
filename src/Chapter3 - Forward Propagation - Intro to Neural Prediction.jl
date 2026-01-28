@@ -88,6 +88,10 @@ md"""
 
 ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
 
+# ╔═╡ 3e9fd101-c355-4d60-b8d8-eae502360e70
+neural_network(input::F, weights::Vector{F} = [0.3, 0.2, 0.9]) where F<:AbstractFloat =
+	ele_mul(input, weights) # prediction
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -144,5 +148,6 @@ version = "5.15.0+0"
 # ╠═2ddf7d1b-cb29-4b75-9681-4fa50d87eec7
 # ╟─3ad5a0e1-ad53-4a95-8029-5baea15e2548
 # ╠═2c6af106-1583-48f1-95f6-3d0c66cee5a4
+# ╠═3e9fd101-c355-4d60-b8d8-eae502360e70
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
