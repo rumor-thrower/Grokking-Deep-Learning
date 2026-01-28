@@ -51,7 +51,8 @@ function w_sum(a::Vector{N}, b::Vector{N}) where N<:Real
 end
 
 # ╔═╡ 8105e6f0-4aee-4d18-a644-1ed4c33503b7
-neural_network(input, weights = [0.1, 0.2, 0]) = w_sum(input, weights) # prediction
+neural_network(input::Vector{F}, weights::Vector{F} = [0.1, 0.2, 0]) where F<:AbstractFloat =
+	w_sum(input, weights) # prediction
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
