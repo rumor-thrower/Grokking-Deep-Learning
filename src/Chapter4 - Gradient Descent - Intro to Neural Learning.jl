@@ -66,7 +66,14 @@ md"""
 """
 
 # ╔═╡ 4c1b81b9-45a1-463c-9e71-a6a45fc97a7a
-function fit(input::F, goal_prediction::F, weight::F, step_amount::F, iteration::Int = 0) where F<:AbstractFloat
+function fit(
+	input::F,
+	goal_prediction::F,
+	weight::F,
+	step_amount::F,
+	iteration::Int = 0
+)::F where F<:AbstractFloat
+
 	prediction = input * weight
 
 	if prediction ≈ goal_prediction
