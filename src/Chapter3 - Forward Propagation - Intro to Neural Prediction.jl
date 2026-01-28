@@ -19,16 +19,6 @@ md"""
 
 neural_network(input, weight = 0.1) = input * weight # prediction
 
-# ╔═╡ 6e21e0ee-69fc-4398-a6dc-a812b4f4a209
-# How we use the network to predict something:
-
-let
-	number_of_toes = [8.5, 9.5, 10, 9]
-	input = number_of_toes[begin]
-	pred = neural_network(input)
-	@assert pred ≈ 0.85
-end
-
 # ╔═╡ 1649a784-2ec8-42fa-8a11-01259cb05b58
 md"""
 # Making a Prediction with Multiple Inputs
@@ -51,6 +41,16 @@ end
 
 # ╔═╡ 8105e6f0-4aee-4d18-a644-1ed4c33503b7
 neural_network(input, weights = [0.1, 0.2, 0]) = w_sum(input, weights) # prediction
+
+# ╔═╡ 6e21e0ee-69fc-4398-a6dc-a812b4f4a209
+# How we use the network to predict something:
+
+let
+	number_of_toes = [8.5, 9.5, 10, 9]
+	input = number_of_toes[begin]
+	pred = neural_network(input)
+	@assert pred ≈ 0.85
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
