@@ -17,7 +17,7 @@ md"""
 # ╔═╡ 7ffdc80b-8c54-46b9-a485-643822b3d435
 # The network:
 
-neural_network(input::N, weight::F = 0.1) where {N<:Real, F<:AbstractFloat} =
+neural_network(input::N, weight::F) where {N<:Real, F<:AbstractFloat} =
 	input * weight # prediction
 
 # ╔═╡ 1649a784-2ec8-42fa-8a11-01259cb05b58
@@ -37,8 +37,28 @@ import LinearAlgebra
 w_sum::Function = LinearAlgebra.dot
 
 # ╔═╡ 8105e6f0-4aee-4d18-a644-1ed4c33503b7
-neural_network(input::Vector{F}, weights::Vector{F} = [0.1, 0.2, 0]) where F<:AbstractFloat =
+neural_network(input::Vector{F}, weights::Vector{F}) where F<:AbstractFloat =
 	w_sum(input, weights) # prediction
+
+# ╔═╡ 3ad5a0e1-ad53-4a95-8029-5baea15e2548
+md"""
+# Making a Prediction with Multiple Outputs
+"""
+
+# ╔═╡ 2c6af106-1583-48f1-95f6-3d0c66cee5a4
+# Instead of predicting just 
+# whether the team won or lost, 
+# now we're also predicting whether
+# they are happy/sad AND the percentage
+# of the team that is hurt. We are
+# making this prediction using only
+# the current win/loss record.
+
+ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
+
+# ╔═╡ 3e9fd101-c355-4d60-b8d8-eae502360e70
+neural_network(input::F, weights::Vector{F}) where F<:AbstractFloat =
+	ele_mul(input, weights) # prediction
 
 # ╔═╡ 6e21e0ee-69fc-4398-a6dc-a812b4f4a209
 # How we use the network to predict something:
@@ -46,7 +66,7 @@ neural_network(input::Vector{F}, weights::Vector{F} = [0.1, 0.2, 0]) where F<:Ab
 let
 	number_of_toes = [8.5, 9.5, 10, 9]
 	input = number_of_toes[begin]
-	pred = neural_network(input)
+	pred = neural_network(input, 0.1)
 	@assert pred ≈ 0.85
 end
 
@@ -68,8 +88,16 @@ let
 	# Input corresponds to every entry
 	# for the first game of the season.
 	input = [toes[begin], wlrec[begin], nfans[begin]]
-	pred = neural_network(input)
+	pred = neural_network(input, [0.1, 0.2, 0])
 	@assert pred ≈ 0.98
+end
+
+# ╔═╡ 8f5e4f4b-af14-4834-a50e-59f86e6fa715
+let
+	wlrec = [0.65, 0.8, 0.8, 0.9]
+	input = wlrec[begin]
+	pred = neural_network(input, [0.3, 0.2, 0.9])
+	@assert pred ≈ [0.195, 0.13, 0.585]
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -126,5 +154,9 @@ version = "5.15.0+0"
 # ╠═d53a4bff-8535-4481-98fe-c0b4489e5c61
 # ╠═8105e6f0-4aee-4d18-a644-1ed4c33503b7
 # ╠═2ddf7d1b-cb29-4b75-9681-4fa50d87eec7
+# ╟─3ad5a0e1-ad53-4a95-8029-5baea15e2548
+# ╠═2c6af106-1583-48f1-95f6-3d0c66cee5a4
+# ╠═3e9fd101-c355-4d60-b8d8-eae502360e70
+# ╠═8f5e4f4b-af14-4834-a50e-59f86e6fa715
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
