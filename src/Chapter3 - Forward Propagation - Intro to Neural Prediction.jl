@@ -92,6 +92,14 @@ ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
 neural_network(input::F, weights::Vector{F} = [0.3, 0.2, 0.9]) where F<:AbstractFloat =
 	ele_mul(input, weights) # prediction
 
+# ╔═╡ 8f5e4f4b-af14-4834-a50e-59f86e6fa715
+let
+	wlrec = [0.65, 0.8, 0.8, 0.9]
+	input = wlrec[begin]
+	pred = neural_network(input)
+	@assert pred ≈ [0.195, 0.13, 0.585]
+end
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -149,5 +157,6 @@ version = "5.15.0+0"
 # ╟─3ad5a0e1-ad53-4a95-8029-5baea15e2548
 # ╠═2c6af106-1583-48f1-95f6-3d0c66cee5a4
 # ╠═3e9fd101-c355-4d60-b8d8-eae502360e70
+# ╠═8f5e4f4b-af14-4834-a50e-59f86e6fa715
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
