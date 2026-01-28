@@ -49,6 +49,9 @@ function w_sum(a::Vector{N}, b::Vector{N}) where N<:Int
 	return output
 end
 
+# ╔═╡ 8105e6f0-4aee-4d18-a644-1ed4c33503b7
+neural_network(input, weights = [0.1, 0.2, 0]) = w_sum(input, weights) # prediction
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -73,5 +76,6 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╟─1649a784-2ec8-42fa-8a11-01259cb05b58
 # ╟─65889eb3-1e2b-45e0-9b8d-0ce244d20283
 # ╠═d53a4bff-8535-4481-98fe-c0b4489e5c61
+# ╠═8105e6f0-4aee-4d18-a644-1ed4c33503b7
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
