@@ -106,14 +106,8 @@ md"""
 """
 
 # ╔═╡ 20b229f1-0a9c-4026-a82d-19dbaeca0338
-function vect_mat_mul(vect::Vector{F}, matrix::Matrix{F}) where F<:AbstractFloat
-	@assert length(vect) == size(matrix, 2)
-	output = similar(vect)
-	map(1:length(vect)) do i
-		output[i] = w_sum(vect, matrix[i, :])
-	end
-	return output
-end
+vect_mat_mul(vect::Vector{F}, matrix::Matrix{F}) where F<:AbstractFloat =
+	matrix * vect
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
