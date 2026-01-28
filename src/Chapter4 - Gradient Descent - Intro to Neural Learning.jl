@@ -67,10 +67,11 @@ md"""
 
 # ╔═╡ 4c1b81b9-45a1-463c-9e71-a6a45fc97a7a
 function fit(input::F, goal_prediction::F, weight::F, step_amount::F, iteration::Int = 0) where F<:AbstractFloat
-	if iteration > 1100
+	prediction = input * weight
+
+	if prediction ≈ goal_prediction
 		return weight
 	else
-	    prediction = input * weight
 	    error = (prediction - goal_prediction) ^ 2
 
 	    @info "Status:" error prediction
