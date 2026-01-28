@@ -50,7 +50,15 @@ function evaluate_error(weight::F, lr::F)::F where F<:AbstractFloat
 end
 
 # ╔═╡ 11550b01-6068-4f02-ab7f-8a7a14971ba3
-@assert evaluate_error(0.1, 0.0) ≈ 0.0225
+let weight = 0.1
+	error = evaluate_error(weight, 0.0)
+	
+	# 3) COMPARE: Making A Prediction With a *Higher* Weight And Evaluating Error
+	@assert evaluate_error(weight, 0.01) < error
+	
+	# 4) COMPARE: Making A Prediction With a *Lower* Weight And Evaluating Error
+	@assert evaluate_error(weight, -0.01) > error
+end
 
 # ╔═╡ 87a9eac4-089f-42d6-a184-c71950fa4e1b
 md"""
