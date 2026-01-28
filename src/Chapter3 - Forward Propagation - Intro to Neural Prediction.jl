@@ -154,6 +154,42 @@ function neural_network(input::Vector{F}, weights::Array{F,3}) where F<:Abstract
 	return pred
 end
 
+# ╔═╡ c932cdf1-ac1d-4293-8edf-24cbc91ac3b1
+let	
+	# This dataset is the current
+	# status at the beginning of
+	# each game for the first 4 games
+	# in a season.
+	
+	# toes = current number of toes
+	# wlrec = current games won (percent)
+	# nfans = fan count (in millions)
+	
+	toes =  [8.5, 9.5, 9.9, 9.0]
+	wlrec = [0.65,0.8, 0.8, 0.9]
+	nfans = [1.2, 1.3, 0.5, 1.0]
+	
+	# Input corresponds to every entry
+	# for the first game of the season.
+	
+	input = [toes[begin], wlrec[begin], nfans[begin]]
+
+	            #toes %win #fans
+	ih_wgt = [0.1 0.2 -0.1; #hid[0]
+			  -0.1 0.1 0.9; #hid[1]
+			  0.1 0.4 0.1] #hid[2]
+	
+	           #hid[0] hid[1] hid[2]
+	hp_wgt = [0.3 1.1 -0.3; #hurt?
+			  0.1 0.2 0.0; #win?
+			  0.0 1.3 0.1] #sad?
+	
+	weights = stack([ih_wgt, hp_wgt])
+
+	pred = neural_network(input,weights)
+	@assert pred ≈ [0.2135, 0.145, 0.5065]
+end
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -218,5 +254,6 @@ version = "5.15.0+0"
 # ╠═ef3aef54-a342-4478-b79f-85cef4a6409b
 # ╟─1ed8c328-d830-4a68-a3b1-5f2af16d3458
 # ╠═2045b84b-a693-44f1-a53e-cba38d2bd95f
+# ╠═c932cdf1-ac1d-4293-8edf-24cbc91ac3b1
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
