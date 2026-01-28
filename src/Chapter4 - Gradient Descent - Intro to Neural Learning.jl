@@ -5,6 +5,88 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ a09ed848-fc3f-11f0-9326-eb498920348a
+md"""
+# Compare: Does our network make good predictions?
+"""
+
+# ╔═╡ 0961c6f5-a925-4744-93e5-9f0665f68852
+
+
+# ╔═╡ 11166a19-00b7-4dd1-a7fe-4113f2b2b80c
+md"""
+# What's the Simplest Form of Neural Learning?
+"""
+
+# ╔═╡ 515ceacb-b7b9-48ff-9f89-d47cb1682ad1
+md"""
+## Learning using the Hot and Cold Method
+"""
+
+# ╔═╡ 73f71bf4-2a55-446f-8480-82c524452d96
+
+
+# ╔═╡ 87a9eac4-089f-42d6-a184-c71950fa4e1b
+md"""
+# Hot and Cold Learning
+"""
+
+# ╔═╡ 4c1b81b9-45a1-463c-9e71-a6a45fc97a7a
+
+
+# ╔═╡ 212f2d35-a435-41f3-bd99-ee8e57f43851
+md"""
+# Calculating Both Direction and Amount from Error
+"""
+
+# ╔═╡ c1126792-5041-439b-b278-38bd66994d03
+
+
+# ╔═╡ 5872d389-8337-451b-8805-1813f5b3cad6
+md"""
+# One Iteration of Gradient Descent
+"""
+
+# ╔═╡ 11a75675-fd2e-4d6b-86d4-6c11b9766552
+
+
+# ╔═╡ 8e8c38cc-a228-41ed-a55e-6623508234f7
+md"""
+# Learning is just Reducing Error
+"""
+
+# ╔═╡ 07f42bd6-f9d4-4d6e-8ac9-a9ed80ab3094
+
+
+# ╔═╡ 6e717e49-d4bc-4627-b0fd-85f61254b9cc
+md"""
+# Let's Watch Several Steps of Learning
+"""
+
+# ╔═╡ 720e28c1-6e99-4b17-ace3-35764cbce995
+
+
+# ╔═╡ 34fb89b1-cbff-484e-baf8-d733b9e49439
+md"""
+# Why does this work? What really is weight_delta?
+"""
+
+# ╔═╡ b15a7c33-4205-49b1-b1cc-d1fc3a766751
+
+
+# ╔═╡ d05250de-4c48-475e-abe3-d9006ff4a2bf
+md"""
+# How to use a Derivative to Learn
+"""
+
+# ╔═╡ 4fdd13ae-470b-4009-bcef-1370b447ce12
+
+
+# ╔═╡ d5cb4920-37e6-4ba9-86d8-60a61fe8e588
+md"""
+# Breaking Gradient Descent
+"""
+
+# ╔═╡ 2ea0fee9-41c6-43de-a3d6-34fd63148b34
 
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -24,6 +106,26 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 """
 
 # ╔═╡ Cell order:
-# ╠═a09ed848-fc3f-11f0-9326-eb498920348a
+# ╟─a09ed848-fc3f-11f0-9326-eb498920348a
+# ╠═0961c6f5-a925-4744-93e5-9f0665f68852
+# ╟─11166a19-00b7-4dd1-a7fe-4113f2b2b80c
+# ╟─515ceacb-b7b9-48ff-9f89-d47cb1682ad1
+# ╠═73f71bf4-2a55-446f-8480-82c524452d96
+# ╟─87a9eac4-089f-42d6-a184-c71950fa4e1b
+# ╠═4c1b81b9-45a1-463c-9e71-a6a45fc97a7a
+# ╟─212f2d35-a435-41f3-bd99-ee8e57f43851
+# ╠═c1126792-5041-439b-b278-38bd66994d03
+# ╟─5872d389-8337-451b-8805-1813f5b3cad6
+# ╠═11a75675-fd2e-4d6b-86d4-6c11b9766552
+# ╟─8e8c38cc-a228-41ed-a55e-6623508234f7
+# ╠═07f42bd6-f9d4-4d6e-8ac9-a9ed80ab3094
+# ╟─6e717e49-d4bc-4627-b0fd-85f61254b9cc
+# ╠═720e28c1-6e99-4b17-ace3-35764cbce995
+# ╟─34fb89b1-cbff-484e-baf8-d733b9e49439
+# ╠═b15a7c33-4205-49b1-b1cc-d1fc3a766751
+# ╟─d05250de-4c48-475e-abe3-d9006ff4a2bf
+# ╠═4fdd13ae-470b-4009-bcef-1370b447ce12
+# ╟─d5cb4920-37e6-4ba9-86d8-60a61fe8e588
+# ╠═2ea0fee9-41c6-43de-a3d6-34fd63148b34
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
