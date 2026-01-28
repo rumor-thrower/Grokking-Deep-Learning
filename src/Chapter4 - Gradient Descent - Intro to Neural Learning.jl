@@ -74,11 +74,8 @@ function fit(input::F, goal_prediction::F, weight::F, step_amount::F) where F<:A
 
 	    @info "Status:" error prediction
 	    
-	    up_prediction = input * (weight + step_amount)
-	    up_error = (goal_prediction - up_prediction) ^ 2
-
-	    down_prediction = input * (weight - step_amount)
-	    down_error = (goal_prediction - down_prediction) ^ 2
+	    up_error = muladd(input, weight + step_amount, -goal_prediction) ^ 2
+	    down_error = muladd(input, weight - step_amount, -goal_prediction) ^ 2
 
 	    weight += step_amount *
 			(down_error < up_error
