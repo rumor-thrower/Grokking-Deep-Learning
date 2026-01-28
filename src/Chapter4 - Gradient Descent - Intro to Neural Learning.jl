@@ -66,7 +66,39 @@ md"""
 """
 
 # ╔═╡ 4c1b81b9-45a1-463c-9e71-a6a45fc97a7a
+function fit(
+	input::F,
+	goal_prediction::F,
+	weight::F,
+	step_amount::F,
+	iteration::Int = 0
+)::F where F<:AbstractFloat
 
+	prediction = input * weight
+
+	if prediction ≈ goal_prediction
+		return weight
+	else
+	    error = (prediction - goal_prediction) ^ 2
+
+	    @info "Status:" error prediction
+	    
+	    up_error = muladd(input, weight + step_amount, -goal_prediction) ^ 2
+	    down_error = muladd(input, weight - step_amount, -goal_prediction) ^ 2
+
+	    weight += step_amount *
+			(down_error < up_error
+			? -1
+			: down_error > up_error
+			? +1
+			: 0)
+
+		fit(input, goal_prediction, weight, step_amount, iteration + 1)
+	end
+end
+
+# ╔═╡ 9dbe1c28-d4dc-4627-a54a-5e7e256a7c14
+fit(0.5, 0.8, 0.5, 0.001)
 
 # ╔═╡ 212f2d35-a435-41f3-bd99-ee8e57f43851
 md"""
@@ -150,6 +182,7 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╠═11550b01-6068-4f02-ab7f-8a7a14971ba3
 # ╟─87a9eac4-089f-42d6-a184-c71950fa4e1b
 # ╠═4c1b81b9-45a1-463c-9e71-a6a45fc97a7a
+# ╠═9dbe1c28-d4dc-4627-a54a-5e7e256a7c14
 # ╟─212f2d35-a435-41f3-bd99-ee8e57f43851
 # ╠═c1126792-5041-439b-b278-38bd66994d03
 # ╟─5872d389-8337-451b-8805-1813f5b3cad6
