@@ -31,7 +31,9 @@ md"""
 """
 
 # ╔═╡ 73f71bf4-2a55-446f-8480-82c524452d96
+# 1) An Empty Network
 
+neural_network(input::F, weight::F) where F<:AbstractFloat = input * weight # predict
 
 # ╔═╡ 87a9eac4-089f-42d6-a184-c71950fa4e1b
 md"""
