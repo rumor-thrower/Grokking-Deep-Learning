@@ -60,6 +60,31 @@ ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
 neural_network(input::F, weights::Vector{F}) where F<:AbstractFloat =
 	ele_mul(input, weights) # prediction
 
+# ╔═╡ f9245814-11cd-41fd-9aa3-d2d89b2af913
+md"""
+# Predicting with Multiple Inputs & Outputs
+"""
+
+# ╔═╡ 20b229f1-0a9c-4026-a82d-19dbaeca0338
+vect_mat_mul(vect::Vector{F}, matrix::Matrix{F}) where F<:AbstractFloat =
+	matrix * vect
+
+# ╔═╡ 026a1125-9056-4fe4-a65b-0934069caf26
+neural_network(input::Vector{F}, weights::Matrix{F}) where F<:AbstractFloat =
+	vect_mat_mul(input, weights) # prediction
+
+# ╔═╡ 1ed8c328-d830-4a68-a3b1-5f2af16d3458
+md"""
+# Predicting on Predictions
+"""
+
+# ╔═╡ 2045b84b-a693-44f1-a53e-cba38d2bd95f
+function neural_network(input::Vector{F}, weights::Array{F,3}) where F<:AbstractFloat
+	hid = vect_mat_mul(input, weights[:, :, 1]) # prediction
+	pred = vect_mat_mul(hid, weights[:, :, 2]) # prediction
+	return pred
+end
+
 # ╔═╡ 6e21e0ee-69fc-4398-a6dc-a812b4f4a209
 # How we use the network to predict something:
 
@@ -100,19 +125,6 @@ let
 	@assert pred ≈ [0.195, 0.13, 0.585]
 end
 
-# ╔═╡ f9245814-11cd-41fd-9aa3-d2d89b2af913
-md"""
-# Predicting with Multiple Inputs & Outputs
-"""
-
-# ╔═╡ 20b229f1-0a9c-4026-a82d-19dbaeca0338
-vect_mat_mul(vect::Vector{F}, matrix::Matrix{F}) where F<:AbstractFloat =
-	matrix * vect
-
-# ╔═╡ 026a1125-9056-4fe4-a65b-0934069caf26
-neural_network(input::Vector{F}, weights::Matrix{F}) where F<:AbstractFloat =
-	vect_mat_mul(input, weights) # prediction
-
 # ╔═╡ ef3aef54-a342-4478-b79f-85cef4a6409b
 let	
 	# This dataset is the current
@@ -140,18 +152,6 @@ let
 
 	pred = neural_network(input,weights)
 	@assert pred ≈ [0.555, 0.98, 0.965]
-end
-
-# ╔═╡ 1ed8c328-d830-4a68-a3b1-5f2af16d3458
-md"""
-# Predicting on Predictions
-"""
-
-# ╔═╡ 2045b84b-a693-44f1-a53e-cba38d2bd95f
-function neural_network(input::Vector{F}, weights::Array{F,3}) where F<:AbstractFloat
-	hid = vect_mat_mul(input, weights[:, :, 1]) # prediction
-	pred = vect_mat_mul(hid, weights[:, :, 2]) # prediction
-	return pred
 end
 
 # ╔═╡ c932cdf1-ac1d-4293-8edf-24cbc91ac3b1
