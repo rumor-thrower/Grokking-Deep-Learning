@@ -173,7 +173,24 @@ md"""
 """
 
 # ╔═╡ 07f42bd6-f9d4-4d6e-8ac9-a9ed80ab3094
+function gradient_descent(weight, goal_pred, input; debug = false)
+	for _ in 1:4
+		debug && @debug "Debug info:" weight
+		
+	    pred = input * weight
+	    error = (pred - goal_pred) ^ 2
+	    delta = pred - goal_pred
+	    weight_delta = delta * input
+	    weight = weight - weight_delta
+	
+	    @info "Status:" error pred
+		
+		debug && @debug "Debug info:" delta weight_delta
+	end
+end
 
+# ╔═╡ 1ee8f9ab-a031-4a7c-ad02-ce4e26f8c31b
+gradient_descent(0.0, 0.8, 0.5)
 
 # ╔═╡ 6e717e49-d4bc-4627-b0fd-85f61254b9cc
 md"""
@@ -181,7 +198,7 @@ md"""
 """
 
 # ╔═╡ 720e28c1-6e99-4b17-ace3-35764cbce995
-
+gradient_descent(0.0, 0.8, 1.1, debug=true)
 
 # ╔═╡ 34fb89b1-cbff-484e-baf8-d733b9e49439
 md"""
@@ -242,6 +259,7 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╠═f85e8765-ffdd-448e-8e7d-be041ee3b4b4
 # ╟─8e8c38cc-a228-41ed-a55e-6623508234f7
 # ╠═07f42bd6-f9d4-4d6e-8ac9-a9ed80ab3094
+# ╠═1ee8f9ab-a031-4a7c-ad02-ce4e26f8c31b
 # ╟─6e717e49-d4bc-4627-b0fd-85f61254b9cc
 # ╠═720e28c1-6e99-4b17-ace3-35764cbce995
 # ╟─34fb89b1-cbff-484e-baf8-d733b9e49439
