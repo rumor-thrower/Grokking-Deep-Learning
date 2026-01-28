@@ -96,7 +96,7 @@ let
 end
 
 # ╔═╡ 6456320d-fccf-4031-9745-621a36786c9f
-function test_neural_network(weights::Vector{F}, goal::F) where F<:AbstractFloat
+function test_neural_network_factory()::Function
 	# This dataset is the current
 	# status at the beginning of
 	# each game for the first 4 games
@@ -113,12 +113,30 @@ function test_neural_network(weights::Vector{F}, goal::F) where F<:AbstractFloat
 	# Input corresponds to every entry
 	# for the first game of the season.
 	input = [toes[begin], wlrec[begin], nfans[begin]]
-	pred = neural_network(input, weights)
-	@assert pred ≈ goal
+
+	test_neural_network(weights::Vector{F}, goal::F) where F<:AbstractFloat =
+		@assert neural_network(input, weights) ≈ goal
+	
+	test_neural_network(weights::Array{F}, goal::Vector{F}) where F<:AbstractFloat =
+		@assert neural_network(input, weights) ≈ goal
+
+	return test_neural_network
 end
+
+# ╔═╡ 4b51b5d3-70a5-4924-919a-1f5be75e92ea
+test_neural_network::Function = test_neural_network_factory()
 
 # ╔═╡ 2ddf7d1b-cb29-4b75-9681-4fa50d87eec7
 test_neural_network([0.1, 0.2, 0], 0.98)
+
+# ╔═╡ ef3aef54-a342-4478-b79f-85cef4a6409b
+let #toes %win #fans
+	weights = [0.1 0.1 -0.3; #hurt?
+			   0.1 0.2 0.0; #win?
+			   0.0 1.3 0.1] #sad?
+
+	test_neural_network(weights, [0.555, 0.98, 0.965])
+end
 
 # ╔═╡ 8f5e4f4b-af14-4834-a50e-59f86e6fa715
 let
@@ -128,56 +146,8 @@ let
 	@assert pred ≈ [0.195, 0.13, 0.585]
 end
 
-# ╔═╡ ef3aef54-a342-4478-b79f-85cef4a6409b
-let	
-	# This dataset is the current
-	# status at the beginning of
-	# each game for the first 4 games
-	# in a season.
-	
-	# toes = current number of toes
-	# wlrec = current games won (percent)
-	# nfans = fan count (in millions)
-	
-	toes =  [8.5, 9.5, 9.9, 9.0]
-	wlrec = [0.65,0.8, 0.8, 0.9]
-	nfans = [1.2, 1.3, 0.5, 1.0]
-	
-	# Input corresponds to every entry
-	# for the first game of the season.
-	
-	input = [toes[begin], wlrec[begin], nfans[begin]]
-
-				#toes %win #fans
-	weights = [0.1 0.1 -0.3; #hurt?
-			   0.1 0.2 0.0; #win?
-			   0.0 1.3 0.1] #sad?
-
-	pred = neural_network(input,weights)
-	@assert pred ≈ [0.555, 0.98, 0.965]
-end
-
 # ╔═╡ c932cdf1-ac1d-4293-8edf-24cbc91ac3b1
-let	
-	# This dataset is the current
-	# status at the beginning of
-	# each game for the first 4 games
-	# in a season.
-	
-	# toes = current number of toes
-	# wlrec = current games won (percent)
-	# nfans = fan count (in millions)
-	
-	toes =  [8.5, 9.5, 9.9, 9.0]
-	wlrec = [0.65,0.8, 0.8, 0.9]
-	nfans = [1.2, 1.3, 0.5, 1.0]
-	
-	# Input corresponds to every entry
-	# for the first game of the season.
-	
-	input = [toes[begin], wlrec[begin], nfans[begin]]
-
-	            #toes %win #fans
+let 		#toes %win #fans
 	ih_wgt = [0.1 0.2 -0.1; #hid[0]
 			  -0.1 0.1 0.9; #hid[1]
 			  0.1 0.4 0.1] #hid[2]
@@ -189,8 +159,7 @@ let
 	
 	weights = stack([ih_wgt, hp_wgt])
 
-	pred = neural_network(input,weights)
-	@assert pred ≈ [0.2135, 0.145, 0.5065]
+	test_neural_network(weights, [0.2135, 0.145, 0.5065])
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -247,6 +216,7 @@ version = "5.15.0+0"
 # ╠═d53a4bff-8535-4481-98fe-c0b4489e5c61
 # ╠═8105e6f0-4aee-4d18-a644-1ed4c33503b7
 # ╠═6456320d-fccf-4031-9745-621a36786c9f
+# ╠═4b51b5d3-70a5-4924-919a-1f5be75e92ea
 # ╠═2ddf7d1b-cb29-4b75-9681-4fa50d87eec7
 # ╟─3ad5a0e1-ad53-4a95-8029-5baea15e2548
 # ╠═2c6af106-1583-48f1-95f6-3d0c66cee5a4
