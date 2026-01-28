@@ -17,7 +17,8 @@ md"""
 # ╔═╡ 7ffdc80b-8c54-46b9-a485-643822b3d435
 # The network:
 
-neural_network(input, weight = 0.1) = input * weight # prediction
+neural_network(input::N, weight::F = 0.1) where {N<:Number, F<:AbstractFloat} =
+	input * weight # prediction
 
 # ╔═╡ 6e21e0ee-69fc-4398-a6dc-a812b4f4a209
 # How we use the network to predict something:
