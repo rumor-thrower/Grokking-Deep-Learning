@@ -106,11 +106,7 @@ md"""
 """
 
 # ╔═╡ c1126792-5041-439b-b278-38bd66994d03
-let
-	weight = 0.5
-	goal_pred = 0.8
-	input = 0.5
-	
+function update_weight_by_error(weight::F, goal_pred::F, input::F) where F>:AbstractFloat
 	for _ in 1:20
 	    pred = input * weight
 	    error = (pred - goal_pred) ^ 2
@@ -120,6 +116,9 @@ let
 	    @info "Status:" error pred
 	end
 end
+
+# ╔═╡ 8d115818-837f-45b7-9b38-38163848b798
+update_weight_by_error(0.5, 0.8, 0.5)
 
 # ╔═╡ 5872d389-8337-451b-8805-1813f5b3cad6
 md"""
@@ -206,7 +205,7 @@ md"""
 """
 
 # ╔═╡ b15a7c33-4205-49b1-b1cc-d1fc3a766751
-
+update_weight_by_error(0.5, 0.8, 0.5)
 
 # ╔═╡ d05250de-4c48-475e-abe3-d9006ff4a2bf
 md"""
@@ -253,6 +252,7 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╠═9dbe1c28-d4dc-4627-a54a-5e7e256a7c14
 # ╟─212f2d35-a435-41f3-bd99-ee8e57f43851
 # ╠═c1126792-5041-439b-b278-38bd66994d03
+# ╠═8d115818-837f-45b7-9b38-38163848b798
 # ╟─5872d389-8337-451b-8805-1813f5b3cad6
 # ╠═11a75675-fd2e-4d6b-86d4-6c11b9766552
 # ╠═722cb92d-54cf-4aa6-b3ce-27f90f59dafb
