@@ -72,6 +72,20 @@ let
 	@assert pred ≈ 0.98
 end
 
+# ╔═╡ 3ad5a0e1-ad53-4a95-8029-5baea15e2548
+md"""
+# Making a Prediction with Multiple Outputs
+"""
+
+# ╔═╡ 2c6af106-1583-48f1-95f6-3d0c66cee5a4
+# Instead of predicting just 
+# whether the team won or lost, 
+# now we're also predicting whether
+# they are happy/sad AND the percentage
+# of the team that is hurt. We are
+# making this prediction using only
+# the current win/loss record.
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -126,5 +140,7 @@ version = "5.15.0+0"
 # ╠═d53a4bff-8535-4481-98fe-c0b4489e5c61
 # ╠═8105e6f0-4aee-4d18-a644-1ed4c33503b7
 # ╠═2ddf7d1b-cb29-4b75-9681-4fa50d87eec7
+# ╟─3ad5a0e1-ad53-4a95-8029-5baea15e2548
+# ╠═2c6af106-1583-48f1-95f6-3d0c66cee5a4
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
