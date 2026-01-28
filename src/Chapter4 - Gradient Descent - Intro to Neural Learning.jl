@@ -106,7 +106,20 @@ md"""
 """
 
 # ╔═╡ c1126792-5041-439b-b278-38bd66994d03
-
+let
+	weight = 0.5
+	goal_pred = 0.8
+	input = 0.5
+	
+	for _ in 1:20
+	    pred = input * weight
+	    error = (pred - goal_pred) ^ 2
+	    direction_and_amount = (pred - goal_pred) * input
+	    weight = weight - direction_and_amount
+	
+	    @info "Status:" error pred
+	end
+end
 
 # ╔═╡ 5872d389-8337-451b-8805-1813f5b3cad6
 md"""
