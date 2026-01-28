@@ -80,13 +80,11 @@ function fit(input::F, goal_prediction::F, weight::F, step_amount::F) where F<:A
 	    down_prediction = input * (weight - step_amount)
 	    down_error = (goal_prediction - down_prediction) ^ 2
 
-	    if(down_error < up_error)
-	        weight = weight - step_amount
-		end
-
-	    if(down_error > up_error)
-	        weight = weight + step_amount
-		end
+	    weight = (down_error < up_error
+				? weight - step_amount
+				: down_error > up_error
+				? weight + step_amount
+				: weight)
 	end
 end
 
