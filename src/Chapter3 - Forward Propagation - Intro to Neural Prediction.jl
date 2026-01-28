@@ -86,7 +86,7 @@ md"""
 # making this prediction using only
 # the current win/loss record.
 
-ele_mul(number,vector) = number * vector
+ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
