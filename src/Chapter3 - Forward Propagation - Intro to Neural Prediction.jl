@@ -119,6 +119,35 @@ end
 neural_network(input::Vector{F}, weights::Matrix{F}) where F<:AbstractFloat =
 	vect_mat_mul(input, weights) # prediction
 
+# ╔═╡ ef3aef54-a342-4478-b79f-85cef4a6409b
+let	
+	# This dataset is the current
+	# status at the beginning of
+	# each game for the first 4 games
+	# in a season.
+	
+	# toes = current number of toes
+	# wlrec = current games won (percent)
+	# nfans = fan count (in millions)
+	
+	toes =  [8.5, 9.5, 9.9, 9.0]
+	wlrec = [0.65,0.8, 0.8, 0.9]
+	nfans = [1.2, 1.3, 0.5, 1.0]
+	
+	# Input corresponds to every entry
+	# for the first game of the season.
+	
+	input = [toes[begin], wlrec[begin], nfans[begin]]
+
+				#toes %win #fans
+	weights = [0.1 0.1 -0.3; #hurt?
+			   0.1 0.2 0.0; #win?
+			   0.0 1.3 0.1] #sad?
+
+	pred = neural_network(input,weights)
+	@assert pred ≈ [0.555, 0.98, 0.965]
+end
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -180,5 +209,6 @@ version = "5.15.0+0"
 # ╟─f9245814-11cd-41fd-9aa3-d2d89b2af913
 # ╠═20b229f1-0a9c-4026-a82d-19dbaeca0338
 # ╠═026a1125-9056-4fe4-a65b-0934069caf26
+# ╠═ef3aef54-a342-4478-b79f-85cef4a6409b
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
