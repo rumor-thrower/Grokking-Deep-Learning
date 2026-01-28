@@ -115,6 +115,10 @@ function vect_mat_mul(vect::Vector{F}, matrix::Matrix{F}) where F<:AbstractFloat
 	return output
 end
 
+# ╔═╡ 026a1125-9056-4fe4-a65b-0934069caf26
+neural_network(input::Vector{F}, weights::Matrix{F}) where F<:AbstractFloat =
+	vect_mat_mul(input, weights) # prediction
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -175,5 +179,6 @@ version = "5.15.0+0"
 # ╠═8f5e4f4b-af14-4834-a50e-59f86e6fa715
 # ╟─f9245814-11cd-41fd-9aa3-d2d89b2af913
 # ╠═20b229f1-0a9c-4026-a82d-19dbaeca0338
+# ╠═026a1125-9056-4fe4-a65b-0934069caf26
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
