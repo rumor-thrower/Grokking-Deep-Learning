@@ -148,6 +148,11 @@ md"""
 """
 
 # ╔═╡ 2045b84b-a693-44f1-a53e-cba38d2bd95f
+function neural_network(input::Vector{F}, weights::Array{F,3}) where F<:AbstractFloat
+	hid = vect_mat_mul(input, weights[:, :, 1]) # prediction
+	pred = vect_mat_mul(hid, weights[:, :, 2]) # prediction
+	return pred
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
