@@ -213,7 +213,7 @@ md"""
 """
 
 # ╔═╡ 4fdd13ae-470b-4009-bcef-1370b447ce12
-
+update_weight_by_error(0.0, 0.8, 1.1)
 
 # ╔═╡ d5cb4920-37e6-4ba9-86d8-60a61fe8e588
 md"""
@@ -221,7 +221,12 @@ md"""
 """
 
 # ╔═╡ 2ea0fee9-41c6-43de-a3d6-34fd63148b34
+update_weight_by_error(0.5, 0.8, 0.5)
 
+# ╔═╡ fe18b2d0-f3c8-4b36-a493-6cd41bf3688f
+# Now let's break it:
+
+update_weight_by_error(0.5, 0.8, 2)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -268,5 +273,6 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╠═4fdd13ae-470b-4009-bcef-1370b447ce12
 # ╟─d5cb4920-37e6-4ba9-86d8-60a61fe8e588
 # ╠═2ea0fee9-41c6-43de-a3d6-34fd63148b34
+# ╠═fe18b2d0-f3c8-4b36-a493-6cd41bf3688f
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
