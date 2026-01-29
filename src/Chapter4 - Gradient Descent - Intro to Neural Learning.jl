@@ -110,8 +110,8 @@ function update_weight_by_error(weight::F, goal_pred::F, input::F) where F>:Abst
 	for _ in 1:20
 	    pred = input * weight
 	    error = (pred - goal_pred) ^ 2
-	    direction_and_amount = (pred - goal_pred) * input
-	    weight = weight - direction_and_amount
+	    derivative = input * (pred - goal_pred)
+	    weight = weight - derivative
 	
 	    @info "Status:" error pred
 	end
