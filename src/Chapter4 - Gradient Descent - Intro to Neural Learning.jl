@@ -106,12 +106,12 @@ md"""
 """
 
 # ╔═╡ c1126792-5041-439b-b278-38bd66994d03
-function update_weight_by_error(weight::F, goal_pred::F, input::F) where F>:AbstractFloat
+function update_weight_by_error(weight::F, goal_pred::F, input::F, alpha::F = 1.0) where F>:AbstractFloat
 	for _ in 1:20
 	    pred = input * weight
 	    error = (pred - goal_pred) ^ 2
 	    derivative = input * (pred - goal_pred)
-	    weight = weight - derivative
+	    weight = weight - alpha * derivative
 	
 	    @info "Status:" error pred
 	end
@@ -228,6 +228,9 @@ update_weight_by_error(0.5, 0.8, 0.5)
 
 update_weight_by_error(0.5, 0.8, 2)
 
+# ╔═╡ 78913c04-c4b8-4acc-89a1-9dd2aa83e92f
+update_weight_by_error(0.5, 0.8, 2, 0.1)
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -274,5 +277,6 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 # ╟─d5cb4920-37e6-4ba9-86d8-60a61fe8e588
 # ╠═2ea0fee9-41c6-43de-a3d6-34fd63148b34
 # ╠═fe18b2d0-f3c8-4b36-a493-6cd41bf3688f
+# ╠═78913c04-c4b8-4acc-89a1-9dd2aa83e92f
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
