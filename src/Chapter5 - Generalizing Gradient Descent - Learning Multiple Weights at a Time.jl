@@ -39,12 +39,32 @@ end
 # ╔═╡ 0d81a5bc-17f2-4830-8587-532ca9631d09
 ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
 
-# ╔═╡ fc07f78d-34dd-4ba8-8478-3eeaa96ef3b2
-function fit(input::Vector{R}, weights::Vector{R}, delta::R, alpha::R) where R<:Real
+# ╔═╡ 3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
+function gradient_descent(
+	weights::Vector{R},
+	alpha::R,
+	fix_index::Union{Nothing, Int} = nothing
+)::Vector{R} where R<:Real
+	(input, label) = extract_input_and_label()
+	
+	pred = neural_network(input, weights)
+	
+	delta = neural_network(input, weights) - label
+	error = delta ^ 2
+
 	weight_deltas = ele_mul(delta, input)
+	if fix_index |> !isnothing
+		weight_deltas[fix_index] = 0
+	end
 	weights -= alpha * weight_deltas
-	return (weights, weight_deltas)
+	
+	@info "Status:" pred error delta weights weight_deltas
+
+	return weights
 end
+
+# ╔═╡ 7b07298d-801c-48fb-a0b9-060ec9b48ade
+gradient_descent([.1, .2, -.1], .01)
 
 # ╔═╡ 8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 md"""
@@ -55,33 +75,15 @@ md"""
 function fit(
 	alpha::R,
 	weights::Vector{R},
-	max_epoch::Int
+	max_epoch::Int,
+	fix_index::Union{Nothing, Int} = nothing
 )::Vector{R} where R<:Real
 	for epoch in 1:max_epoch
 		@info "epoch:" epoch
-		weights = gradient_descent(weights, alpha)
+		weights = gradient_descent(weights, alpha, fix_index)
 	end
 	return weights
 end
-
-# ╔═╡ 3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
-function gradient_descent(weights::Vector{R}, alpha::R)::Vector{R} where R<:Real
-	(input, label) = extract_input_and_label()
-	
-	pred = neural_network(input, weights)
-	
-	delta = neural_network(input, weights) - label
-	error = delta ^ 2
-	
-	(weights, weight_deltas) = fit(input, weights, delta, alpha)
-	
-	@info "Status:" pred error delta weights weight_deltas
-
-	return weights
-end
-
-# ╔═╡ 7b07298d-801c-48fb-a0b9-060ec9b48ade
-gradient_descent([.1, .2, -.1], .01)
 
 # ╔═╡ 2b820d8a-fd3f-4bca-8a2c-ffd97af67eda
 fit(.01, [.1, .2, -.1], 3)	# good alpha - weights converge...
@@ -94,8 +96,8 @@ md"""
 # Freezing One Weight - What Does It Do?
 """
 
-# ╔═╡ ca06a804-15db-4ce6-927e-1b158ff7c9e0
-
+# ╔═╡ b6c81b62-478f-4966-9b2f-2ba0e854a196
+fit(.3, [.1, .2, -.1], 3, 1)
 
 # ╔═╡ 93ec1387-4a5b-4c88-81ec-e374b22f15cd
 md"""
@@ -163,7 +165,6 @@ version = "5.15.0+0"
 # ╠═732caae4-75b7-4c8f-abb6-058527fedb71
 # ╠═9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
 # ╠═0d81a5bc-17f2-4830-8587-532ca9631d09
-# ╠═fc07f78d-34dd-4ba8-8478-3eeaa96ef3b2
 # ╠═3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
 # ╠═7b07298d-801c-48fb-a0b9-060ec9b48ade
 # ╟─8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
@@ -171,7 +172,7 @@ version = "5.15.0+0"
 # ╠═2b820d8a-fd3f-4bca-8a2c-ffd97af67eda
 # ╠═277ecfe1-bcf6-4030-afb1-f4408d2a9052
 # ╟─a746572b-14cf-42f8-bc05-6b34f44d8a6b
-# ╠═ca06a804-15db-4ce6-927e-1b158ff7c9e0
+# ╠═b6c81b62-478f-4966-9b2f-2ba0e854a196
 # ╟─93ec1387-4a5b-4c88-81ec-e374b22f15cd
 # ╠═ea7fe6ff-81f4-4bd4-bf1a-120fe9053dcb
 # ╟─04f8b253-3847-4578-b9cf-7bdc9c67f015
