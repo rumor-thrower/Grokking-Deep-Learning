@@ -20,8 +20,16 @@ function neural_network(input::Vector{R}, weight::Vector{R})::R where R<:Real
 	return w_sum(input, weight) # predict
 end
 
+# ╔═╡ 0d81a5bc-17f2-4830-8587-532ca9631d09
+ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
+
+# ╔═╡ 237a6a11-af02-4ee9-ac5d-f6d3f02b2117
+function neural_network(input::R, weight::Vector{R})::Vector{R} where R<:Real
+	return ele_mul(input, weight) # predict
+end
+
 # ╔═╡ 9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
-function extract_input_and_label()::Tuple{Vector{Float64}, Int}
+function get_input_and_label(::Val{:multi_input})::Tuple{Vector{Float64}, Int}
 	toes =  [8.5, 9.5, 9.9, 9.0]
 	wlrec = [0.65, 0.8, 0.8, 0.9]
 	nfans = [1.2, 1.3, 0.5, 1.0]
@@ -36,26 +44,32 @@ function extract_input_and_label()::Tuple{Vector{Float64}, Int}
 	return (input, label)
 end
 
-# ╔═╡ 0d81a5bc-17f2-4830-8587-532ca9631d09
-ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
-
-# ╔═╡ 237a6a11-af02-4ee9-ac5d-f6d3f02b2117
-function neural_network(input::R, weight::Vector{R})::Vector{R} where R<:Real
-	return ele_mul(input, weight) # predict
+# ╔═╡ c9792dc3-e890-4b05-aa20-0145c3129658
+function get_input_and_label(::Val{:multi_output})::Tuple{Float64, Vector{Float64}}
+	wlrec = [0.65, 1.0, 1.0, 0.9]
+	
+	hurt  = [.1, .0, .0, .1]
+	win   = [1.0, 1.0, .0, 1.0]
+	sad   = [.1, .0, .1, .2]
+	
+	input = wlrec[1]
+	label = [hurt[1], win[1], sad[1]]
+	
+	return (input, label)
 end
 
 # ╔═╡ 3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
 function gradient_descent(
 	weights::Vector{R},
 	alpha::R,
-	fix_index::Union{Nothing, Int} = nothing
+	fix_index::Union{Nothing, Int}
 )::Vector{R} where R<:Real
-	(input, label) = extract_input_and_label()
+	(input, label) = get_input_and_label(Val(:multi_input))
 	
-	pred = neural_network(input, weights)
+	pred::R = neural_network(input, weights)
 	
-	delta = neural_network(input, weights) - label
-	error = delta ^ 2
+	delta::R = neural_network(input, weights) - label
+	error::R = delta ^ 2
 
 	weight_deltas = ele_mul(delta, input)
 	if fix_index |> !isnothing
@@ -68,8 +82,28 @@ function gradient_descent(
 	return weights
 end
 
+# ╔═╡ 2f98e204-4811-4002-b17f-c516a112e075
+function gradient_descent(
+	weights::Vector{R},
+	alpha::R,
+)::Vector{R} where R<:Real
+	(input, label) = get_input_and_label(Val(:multi_output))
+	
+	pred::Vector{R} = neural_network(input, weights)
+	
+	delta::Vector{R} = neural_network(input, weights) .- label
+	error::Vector{R} = delta .^ 2
+	
+	weight_deltas = ele_mul(input, delta)
+	weights -= alpha * weight_deltas
+	
+	@info "Status:" pred error delta weights weight_deltas
+	
+	return weights
+end
+
 # ╔═╡ 7b07298d-801c-48fb-a0b9-060ec9b48ade
-gradient_descent([.1, .2, -.1], .01)
+gradient_descent([.1, .2, -.1], .01, nothing)
 
 # ╔═╡ 8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 md"""
@@ -110,7 +144,7 @@ md"""
 """
 
 # ╔═╡ ea7fe6ff-81f4-4bd4-bf1a-120fe9053dcb
-
+gradient_descent([.3, .2, .9], .1)
 
 # ╔═╡ 04f8b253-3847-4578-b9cf-7bdc9c67f015
 md"""
@@ -168,10 +202,12 @@ version = "5.15.0+0"
 # ╠═df5a2868-4486-469a-bcdd-d9fca23b9585
 # ╠═bb4d9e65-8cc5-4d31-b80a-5df1b8bf9663
 # ╠═732caae4-75b7-4c8f-abb6-058527fedb71
+# ╠═0d81a5bc-17f2-4830-8587-532ca9631d09
 # ╠═237a6a11-af02-4ee9-ac5d-f6d3f02b2117
 # ╠═9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
-# ╠═0d81a5bc-17f2-4830-8587-532ca9631d09
+# ╠═c9792dc3-e890-4b05-aa20-0145c3129658
 # ╠═3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
+# ╠═2f98e204-4811-4002-b17f-c516a112e075
 # ╠═7b07298d-801c-48fb-a0b9-060ec9b48ade
 # ╟─8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 # ╠═3c56a7b9-fabd-4e4e-817b-d83ff31a40f1
