@@ -17,26 +17,30 @@ function grad_desc_factory(input::R, goal_pred::R, alpha::R)::Function where R<:
 		
 		pred = input * weight
 		if pred ≈ goal_pred
-			weight
-		else
-			older_mse, old_mse = mse_pairs.second
-			pure_error = pred - goal_pred
-			new_mse = pure_error ^ 2
-			if older_mse < old_mse < new_mse
-				@error "Rising MSE, wrong alpha:" alpha
-				# Also covers rocking MSE case
-				return weight
-			elseif older_mse ≈ old_mse ≈ new_mse
-				@error "Fixed MSE, wrong alpha:" alpha
-				return weight
-			end
-			derivative = input * pure_error
-			new_weight = weight - alpha * derivative
-			
-			@info "Status:" pred new_mse
-			
-			grad_descent(new_weight, older_mse => old_mse => new_mse)
-	   end
+			return weight	# early stop
+		end
+		
+		older_mse, old_mse = mse_pairs.second
+		pure_error = pred - goal_pred
+		new_mse = pure_error ^ 2
+
+		if older_mse < old_mse < new_mse
+			@error "Rising MSE, wrong alpha:" alpha
+			# Also covers rocking MSE case
+			return weight	# early stop
+		end
+
+		if older_mse ≈ old_mse ≈ new_mse
+			@error "Fixed MSE, wrong alpha:" alpha
+			return weight	# early stop
+		end
+
+		derivative = input * pure_error
+		new_weight = weight - alpha * derivative
+		
+		@info "Status:" pred new_mse
+		
+		grad_descent(new_weight, older_mse => old_mse => new_mse)
 	end
 end
 
