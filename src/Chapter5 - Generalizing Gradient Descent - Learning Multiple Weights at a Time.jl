@@ -28,6 +28,16 @@ function neural_network(input::R, weight::Vector{R})::Vector{R} where R<:Real
 	return ele_mul(input, weight) # predict
 end
 
+# ╔═╡ 1fe109e9-3ff2-4c81-824a-296dd4b6f33a
+function vect_mat_mul(vect::Vector{R}, matrix::Matrix{R})::Vector{R} where R<:Real
+	return matrix * vect
+end
+
+# ╔═╡ ac51964b-a14d-47b4-8f66-1957ec970706
+function neural_network(in::Vector{R}, weights::Matrix{R})::Vector{R} where R<:Real
+	return vect_mat_mul(in, weights) # prediction
+end
+
 # ╔═╡ 9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
 function get_input_and_label(::Val{:multi_input})::Tuple{Vector{Float64}, Int}
 	toes =  [8.5, 9.5, 9.9, 9.0]
@@ -204,6 +214,8 @@ version = "5.15.0+0"
 # ╠═732caae4-75b7-4c8f-abb6-058527fedb71
 # ╠═0d81a5bc-17f2-4830-8587-532ca9631d09
 # ╠═237a6a11-af02-4ee9-ac5d-f6d3f02b2117
+# ╠═1fe109e9-3ff2-4c81-824a-296dd4b6f33a
+# ╠═ac51964b-a14d-47b4-8f66-1957ec970706
 # ╠═9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
 # ╠═c9792dc3-e890-4b05-aa20-0145c3129658
 # ╠═3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
