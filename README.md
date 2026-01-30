@@ -67,14 +67,14 @@ Example data files: `shakespear.txt`, `labels.txt`, `spam.txt`, etc., are used b
 
 
 ## Contributing
-- To port or modify, fork → branch → open a PR. Include: changed files, short run instructions, and (optionally) screenshots of reproduced examples.
+- To port or modify, [fork](https://github.com/rumor-thrower/Grokking-Deep-Learning/fork) → branch → [open a PR](https://github.com/rumor-thrower/Grokking-Deep-Learning/pull/new/develop). Include: changed files, short run instructions, and (optionally) screenshots of reproduced examples.
 
 ## License & Copyright
 - This repository is a learning-oriented port/notes collection. Respect the original author's copyright and licensing when using source materials — check the original work's license/permissions.
 
 ## Contact / Further Work
 - Plans include porting more chapters to `Julia` or adding simple automated checks that validate cell reproduction.
-- For questions or contributions, please use this repository's issue tracker.
+- For questions or contributions, please use this repository's [issue tracker](https://github.com/rumor-thrower/Grokking-Deep-Learning/issues).
 
 ---
 
