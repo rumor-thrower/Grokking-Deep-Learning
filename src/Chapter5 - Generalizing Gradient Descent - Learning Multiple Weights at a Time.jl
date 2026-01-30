@@ -46,31 +46,48 @@ function fit(input::Vector{R}, weights::Vector{R}, delta::R, alpha::R) where R<:
 	return (weights, weight_deltas)
 end
 
-# ╔═╡ 3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
-function gradient_descent(weights::Vector{R}, alpha::R) where R<:Real
-	(input, label) = extract_input_and_label()
-	
-	pred = neural_network(input, weights)
-	
-	delta = neural_network(input, weights) - label
-	@assert delta ≈ -.14
-	error = delta ^ 2
-	
-	(weights, weight_deltas) = fit(input, weights, delta, alpha)
-	
-	@info "Status:" pred error delta weights weight_deltas
-end
-
-# ╔═╡ 7b07298d-801c-48fb-a0b9-060ec9b48ade
-gradient_descent([.1, .2, -.1], .01)
-
 # ╔═╡ 8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 md"""
 # Let's Watch Several Steps of Learning
 """
 
 # ╔═╡ 3c56a7b9-fabd-4e4e-817b-d83ff31a40f1
+function fit(
+	alpha::R,
+	weights::Vector{R},
+	max_epoch::Int
+)::Vector{R} where R<:Real
+	for epoch in 1:max_epoch
+		@info "epoch:" epoch
+		weights = gradient_descent(weights, alpha)
+	end
+	return weights
+end
 
+# ╔═╡ 3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
+function gradient_descent(weights::Vector{R}, alpha::R)::Vector{R} where R<:Real
+	(input, label) = extract_input_and_label()
+	
+	pred = neural_network(input, weights)
+	
+	delta = neural_network(input, weights) - label
+	error = delta ^ 2
+	
+	(weights, weight_deltas) = fit(input, weights, delta, alpha)
+	
+	@info "Status:" pred error delta weights weight_deltas
+
+	return weights
+end
+
+# ╔═╡ 7b07298d-801c-48fb-a0b9-060ec9b48ade
+gradient_descent([.1, .2, -.1], .01)
+
+# ╔═╡ 2b820d8a-fd3f-4bca-8a2c-ffd97af67eda
+fit(.01, [.1, .2, -.1], 3)	# good alpha - weights converge...
+
+# ╔═╡ 277ecfe1-bcf6-4030-afb1-f4408d2a9052
+fit(.1, [.1, .2, -.1], 3)	# bad alpha - weights diverge!
 
 # ╔═╡ a746572b-14cf-42f8-bc05-6b34f44d8a6b
 md"""
@@ -151,6 +168,8 @@ version = "5.15.0+0"
 # ╠═7b07298d-801c-48fb-a0b9-060ec9b48ade
 # ╟─8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 # ╠═3c56a7b9-fabd-4e4e-817b-d83ff31a40f1
+# ╠═2b820d8a-fd3f-4bca-8a2c-ffd97af67eda
+# ╠═277ecfe1-bcf6-4030-afb1-f4408d2a9052
 # ╟─a746572b-14cf-42f8-bc05-6b34f44d8a6b
 # ╠═ca06a804-15db-4ce6-927e-1b158ff7c9e0
 # ╟─93ec1387-4a5b-4c88-81ec-e374b22f15cd
