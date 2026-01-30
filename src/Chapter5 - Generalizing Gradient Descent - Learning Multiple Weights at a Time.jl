@@ -39,6 +39,11 @@ end
 # ╔═╡ 0d81a5bc-17f2-4830-8587-532ca9631d09
 ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
 
+# ╔═╡ 237a6a11-af02-4ee9-ac5d-f6d3f02b2117
+function neural_network(input::R, weight::Vector{R})::Vector{R} where R<:Real
+	return ele_mul(input, weight) # predict
+end
+
 # ╔═╡ 3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
 function gradient_descent(
 	weights::Vector{R},
@@ -163,6 +168,7 @@ version = "5.15.0+0"
 # ╠═df5a2868-4486-469a-bcdd-d9fca23b9585
 # ╠═bb4d9e65-8cc5-4d31-b80a-5df1b8bf9663
 # ╠═732caae4-75b7-4c8f-abb6-058527fedb71
+# ╠═237a6a11-af02-4ee9-ac5d-f6d3f02b2117
 # ╠═9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
 # ╠═0d81a5bc-17f2-4830-8587-532ca9631d09
 # ╠═3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
