@@ -20,6 +20,35 @@ function neural_network(input::Vector{R}, weight::Vector{R})::R where R<:Real
 	return w_sum(input, weight) # predict
 end
 
+# ╔═╡ 9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
+function extract_input_and_label()::Tuple{Vector{Float64}, Int}
+	toes =  [8.5, 9.5, 9.9, 9.0]
+	wlrec = [0.65, 0.8, 0.8, 0.9]
+	nfans = [1.2, 1.3, 0.5, 1.0]
+	
+	win_or_lose_binary = [1, 1, 0, 1]
+	label = win_or_lose_binary[begin]
+	
+	# Input corresponds to every entry
+	# for the first game of the season.
+	input = [toes[begin], wlrec[begin], nfans[begin]]
+	
+	return (input, label)
+end
+
+# ╔═╡ 10e36edf-7ebb-4940-94af-3f9682d4610f
+# Calculate pure error (= prediction - goal)
+calc_delta(input::Vector{R}, label::Int, weights::Vector{R}) where R<:Real =
+	neural_network(input, weights) - label
+
+# ╔═╡ 3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
+let (input, label) = extract_input_and_label()
+	weights = [.1, .2, -.1]
+	
+	delta = calc_delta(input, label, weights)
+	@assert delta ≈ -.14
+end
+
 # ╔═╡ 8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 md"""
 # Let's Watch Several Steps of Learning
@@ -100,6 +129,9 @@ version = "5.15.0+0"
 # ╠═df5a2868-4486-469a-bcdd-d9fca23b9585
 # ╠═bb4d9e65-8cc5-4d31-b80a-5df1b8bf9663
 # ╠═732caae4-75b7-4c8f-abb6-058527fedb71
+# ╠═9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
+# ╠═10e36edf-7ebb-4940-94af-3f9682d4610f
+# ╠═3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
 # ╟─8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 # ╠═3c56a7b9-fabd-4e4e-817b-d83ff31a40f1
 # ╟─a746572b-14cf-42f8-bc05-6b34f44d8a6b
