@@ -36,18 +36,33 @@ function extract_input_and_label()::Tuple{Vector{Float64}, Int}
 	return (input, label)
 end
 
-# ╔═╡ 10e36edf-7ebb-4940-94af-3f9682d4610f
-# Calculate pure error (= prediction - goal)
-calc_delta(input::Vector{R}, label::Int, weights::Vector{R}) where R<:Real =
-	neural_network(input, weights) - label
+# ╔═╡ 0d81a5bc-17f2-4830-8587-532ca9631d09
+ele_mul(number::N, vector::Vector{N}) where N<:Real = number * vector
+
+# ╔═╡ fc07f78d-34dd-4ba8-8478-3eeaa96ef3b2
+function fit(input::Vector{R}, weights::Vector{R}, delta::R, alpha::R) where R<:Real
+	weight_deltas = ele_mul(delta, input)
+	weights -= alpha * weight_deltas
+	return (weights, weight_deltas)
+end
 
 # ╔═╡ 3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
-let (input, label) = extract_input_and_label()
-	weights = [.1, .2, -.1]
+function gradient_descent(weights::Vector{R}, alpha::R) where R<:Real
+	(input, label) = extract_input_and_label()
 	
-	delta = calc_delta(input, label, weights)
+	pred = neural_network(input, weights)
+	
+	delta = neural_network(input, weights) - label
 	@assert delta ≈ -.14
+	error = delta ^ 2
+	
+	(weights, weight_deltas) = fit(input, weights, delta, alpha)
+	
+	@info "Status:" pred error delta weights weight_deltas
 end
+
+# ╔═╡ 7b07298d-801c-48fb-a0b9-060ec9b48ade
+gradient_descent([.1, .2, -.1], .01)
 
 # ╔═╡ 8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 md"""
@@ -130,8 +145,10 @@ version = "5.15.0+0"
 # ╠═bb4d9e65-8cc5-4d31-b80a-5df1b8bf9663
 # ╠═732caae4-75b7-4c8f-abb6-058527fedb71
 # ╠═9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
-# ╠═10e36edf-7ebb-4940-94af-3f9682d4610f
+# ╠═0d81a5bc-17f2-4830-8587-532ca9631d09
+# ╠═fc07f78d-34dd-4ba8-8478-3eeaa96ef3b2
 # ╠═3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
+# ╠═7b07298d-801c-48fb-a0b9-060ec9b48ade
 # ╟─8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 # ╠═3c56a7b9-fabd-4e4e-817b-d83ff31a40f1
 # ╟─a746572b-14cf-42f8-bc05-6b34f44d8a6b
