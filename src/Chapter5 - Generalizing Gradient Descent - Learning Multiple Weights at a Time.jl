@@ -68,6 +68,22 @@ function get_input_and_label(::Val{:multi_output})::Tuple{Float64, Vector{Float6
 	return (input, label)
 end
 
+# ╔═╡ 6bebba56-8674-4a5e-aaa3-595f78f5b747
+function get_input_and_label(::Val{:multi_in_out})::Tuple{Vector{Float64}, Vector{Float64}}
+	toes =  [8.5, 9.5, 9.9, 9.0]
+	wlrec = [.65, .8, .8, .9]
+	nfans = [1.2, 1.3, .5, 1.0]
+	
+	hurt  = [.1, .0, .0, .1]
+	win   = [1.0, 1.0, .0, 1.0]
+	sad   = [.1, .0, .1, .2]
+	
+	input = [toes[begin], wlrec[begin], nfans[begin]]
+	label = [hurt[1], win[1], sad[1]]
+	
+	return (input, label)
+end
+
 # ╔═╡ 3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
 function gradient_descent(
 	weights::Vector{R},
@@ -162,7 +178,17 @@ md"""
 """
 
 # ╔═╡ b4d2afab-531d-4241-b9bd-a779318c96f3
-
+let
+	(input, label) = get_input_and_label(Val(:multi_in_out))
+	
+			#toes %win #fans
+	weights = [.1 .1 -.3; #hurt?
+			   .1 .2 .0; #win?
+			   .0 1.3 .1] #sad?
+	
+	pred = neural_network(input, weights)
+	@assert pred ≈ [0.555, 0.98, 0.965]
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -218,6 +244,7 @@ version = "5.15.0+0"
 # ╠═ac51964b-a14d-47b4-8f66-1957ec970706
 # ╠═9a6c6ed6-b96d-4e32-97ed-e2ad960f581a
 # ╠═c9792dc3-e890-4b05-aa20-0145c3129658
+# ╠═6bebba56-8674-4a5e-aaa3-595f78f5b747
 # ╠═3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
 # ╠═2f98e204-4811-4002-b17f-c516a112e075
 # ╠═7b07298d-801c-48fb-a0b9-060ec9b48ade
