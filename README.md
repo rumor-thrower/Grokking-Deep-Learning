@@ -56,8 +56,8 @@ Example data files: `shakespear.txt`, `labels.txt`, `spam.txt`, etc., are used b
 
 ## Porting Guide (Short)
 - Follow the original notebook cell-by-cell and reproduce the same numbers/outputs.
-- Replace NumPy/Matplotlib calls with `Julia` equivalents such as `LinearAlgebra`, `Plots.jl`, or `JuliaImages.jl`.
-- For automatic differentiation examples, compare `Zygote.jl` with simple numeric-differentiation implementations.
+- Replace [`NumPy`](https://numpy.org/)/[`Matplotlib`](https://matplotlib.org/) calls with `Julia` equivalents such as [`LinearAlgebra`](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/), [`Plots.jl`](https://github.com/JuliaPlots/Plots.jl/) or [`Images.jl`](https://github.com/JuliaImages/Images.jl/).
+- For automatic differentiation examples, compare [`Zygote.jl`](https://fluxml.ai/Zygote.jl/) with simple numeric-differentiation implementations.
 - Record major numerical or performance differences as comments in the notebook when porting.
 
 ## Porting Checklist (example)
