@@ -10,6 +10,21 @@ md"""
 """
 
 # ╔═╡ 941e115e-307c-4aec-a6d6-5f90866ecc3e
+function get_input_and_goal()::Tuple{BitVector, Bool}
+	streetlights = BitMatrix([ 1 0 1 ;
+							   0 1 1 ;
+							   0 0 1 ;
+							   1 1 1 ;
+							   0 1 1 ;
+							   1 0 1 ])
+	
+	walk_vs_stop = BitVector([ 0, 1, 0, 1, 1, 0 ])
+
+	input::BitVector = streetlights[begin, :]
+	goal::Bool = walk_vs_stop[begin]
+
+	return (input, goal)
+end
 
 
 # ╔═╡ 20f1e96c-613d-42f4-928a-3c4f033263e2
@@ -78,7 +93,7 @@ project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
 
 # ╔═╡ Cell order:
 # ╟─c4ac87fe-fe8f-11f0-bd44-e7be41300a4b
-# ╠═941e115e-307c-4aec-a6d6-5f90866ecc3e
+# ╟─941e115e-307c-4aec-a6d6-5f90866ecc3e
 # ╟─20f1e96c-613d-42f4-928a-3c4f033263e2
 # ╠═0ecea74e-0443-4d1a-9843-b1a8bee23eb5
 # ╟─e2ea141a-560e-4f68-be97-44dbfc749a0f
