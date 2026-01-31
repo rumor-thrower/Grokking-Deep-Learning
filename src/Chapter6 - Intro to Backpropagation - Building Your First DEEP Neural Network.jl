@@ -26,6 +26,56 @@ function get_input_and_goal()::Tuple{BitVector, Bool}
 	return (input, goal)
 end
 
+# ╔═╡ 9961822e-8687-49fe-8e76-2d456334ee57
+import LinearAlgebra
+
+# ╔═╡ 34cabbbf-a02f-410d-9e0f-43493eec46f1
+"""
+	fit_factory(
+		input::Row,
+		goal::Bool,
+		alpha::R
+	)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
+
+Returns a function that fits a neural network for a single input-goal pair with learning rate `alpha`.
+"""
+function fit_factory(
+	input::Row,
+	goal::Bool,
+	alpha::R
+)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	"""
+		fit(weights::W, epochs_left::Int)::W where W<:VecOrMat{<:Real}
+	
+	Fits the neural network weights for the given number of epochs.
+	"""
+	function fit(weights::W, epochs_left::Int)::W where W<:VecOrMat{<:Real}
+		
+		if epochs_left < 1
+			return weights
+		end
+		
+		R2 = eltype(W)
+		
+		pred::R2 = LinearAlgebra.dot(input, weights)
+		delta::R2 = pred - goal
+		error::R2 = delta ^ 2
+		weights::W -= alpha * input * delta
+	
+		@debug "Status:" input error pred
+		
+		return fit(weights, epochs_left - 1)
+	end
+end
+
+# ╔═╡ 226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
+let (input, goal) = get_input_and_goal()
+	
+	fit::Function = fit_factory(input, goal, .1)
+	
+	fit([.5, .48, -.7], 20)
+end
 
 # ╔═╡ 20f1e96c-613d-42f4-928a-3c4f033263e2
 md"""
@@ -78,6 +128,7 @@ md"""
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -86,14 +137,43 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.12.4"
 manifest_format = "2.0"
-project_hash = "71853c6197a6a7f222db0f1978c7cb232b87c5ee"
+project_hash = "f352ceee806168c8ae38887a01d7bae6ca62470b"
 
-[deps]
+[[deps.Artifacts]]
+uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
+version = "1.11.0"
+
+[[deps.CompilerSupportLibraries_jll]]
+deps = ["Artifacts", "Libdl"]
+uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
+version = "1.3.0+1"
+
+[[deps.Libdl]]
+uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
+version = "1.11.0"
+
+[[deps.LinearAlgebra]]
+deps = ["Libdl", "OpenBLAS_jll", "libblastrampoline_jll"]
+uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+version = "1.12.0"
+
+[[deps.OpenBLAS_jll]]
+deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
+uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
+version = "0.3.29+0"
+
+[[deps.libblastrampoline_jll]]
+deps = ["Artifacts", "Libdl"]
+uuid = "8e850b90-86db-534c-a0d3-1478176c7d93"
+version = "5.15.0+0"
 """
 
 # ╔═╡ Cell order:
 # ╟─c4ac87fe-fe8f-11f0-bd44-e7be41300a4b
 # ╟─941e115e-307c-4aec-a6d6-5f90866ecc3e
+# ╠═9961822e-8687-49fe-8e76-2d456334ee57
+# ╟─34cabbbf-a02f-410d-9e0f-43493eec46f1
+# ╠═226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
 # ╟─20f1e96c-613d-42f4-928a-3c4f033263e2
 # ╠═0ecea74e-0443-4d1a-9843-b1a8bee23eb5
 # ╟─e2ea141a-560e-4f68-be97-44dbfc749a0f
