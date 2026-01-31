@@ -94,7 +94,7 @@ function gradient_descent(
 	
 	pred::R = neural_network(input, weights)
 	
-	delta::R = neural_network(input, weights) - label
+	delta::R = pred .- label
 	error::R = delta ^ 2
 
 	weight_deltas = ele_mul(delta, input)
@@ -117,7 +117,7 @@ function gradient_descent(
 	
 	pred::Vector{R} = neural_network(input, weights)
 	
-	delta::Vector{R} = neural_network(input, weights) .- label
+	delta::Vector{R} = pred .- label
 	error::Vector{R} = delta .^ 2
 	
 	weight_deltas = ele_mul(input, delta)
