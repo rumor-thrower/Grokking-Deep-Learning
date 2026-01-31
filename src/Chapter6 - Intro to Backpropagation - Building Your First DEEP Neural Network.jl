@@ -10,6 +10,21 @@ md"""
 """
 
 # ╔═╡ 941e115e-307c-4aec-a6d6-5f90866ecc3e
+function get_input_and_goal()::Tuple{BitVector, Bool}
+	streetlights = BitMatrix([ 1 0 1 ;
+							   0 1 1 ;
+							   0 0 1 ;
+							   1 1 1 ;
+							   0 1 1 ;
+							   1 0 1 ])
+	
+	walk_vs_stop = BitVector([ 0, 1, 0, 1, 1, 0 ])
+
+	input::BitVector = streetlights[begin, :]
+	goal::Bool = walk_vs_stop[begin]
+
+	return (input, goal)
+end
 
 
 # ╔═╡ 20f1e96c-613d-42f4-928a-3c4f033263e2
