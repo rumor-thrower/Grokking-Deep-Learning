@@ -83,7 +83,15 @@ md"""
 """
 
 # ╔═╡ 0ecea74e-0443-4d1a-9843-b1a8bee23eb5
-
+let
+	a = [0, 1, 2, 1]
+	b = [2, 2, 2, 3]
+	
+	@assert a .* b == [0, 2, 4, 3] # elementwise multiplication
+	@assert a .+ b == [2, 3, 4, 4] # elementwise addition
+	@assert a .* 0.5 == [.0, .5, 1.0, .5] # vector-scalar multiplication
+	@assert a .+ 0.5 == [.5, 1.5, 2.5, 1.5] # vector-scalar addition
+end
 
 # ╔═╡ e2ea141a-560e-4f68-be97-44dbfc749a0f
 md"""
