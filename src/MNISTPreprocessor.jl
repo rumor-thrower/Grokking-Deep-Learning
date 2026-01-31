@@ -1,8 +1,57 @@
+### A Pluto.jl notebook ###
+# v0.20.21
+
+using Markdown
+using InteractiveUtils
+
+# ╔═╡ 023a4bea-fe56-11f0-aa51-73cdd34844e0
+using MLDatasets: MNIST
+
+# ╔═╡ 6eb3e073-375d-44d8-9457-696cbea63520
+ENV["DATADEPS_ALWAYS_ACCEPT"] = true 	# auto-accept download
+
+# ╔═╡ a6b03d92-169b-4aeb-8393-c6e2e13de4f8
+trainset, testset =
+	(MNIST(split = type, dir = "../dataset/$type") for type in [:train, :test])
+
+# ╔═╡ 248acf45-d401-484c-9623-5a335614cd21
+X_train, y_train = trainset[:] # all observations
+
+# ╔═╡ 57c046b3-602e-4845-ad65-1d7a341c2d5c
+X_test, y_test = testset[:] 			# all labels
+
+# ╔═╡ b3660428-f4b5-40ef-b935-fa1753ca29de
+images = X_train[:, :, begin:1000]
+
+# ╔═╡ 5e7f6ea7-946c-4f53-8db0-1c442737b25b
+labels = y_train[begin:1000]
+
+# ╔═╡ 4cfd9a0c-8a33-402d-a426-dee73ea03c88
+@info "Summary:" (summary(X_train), 	# 28×28×60000 Array{Float32, 3}
+				  summary(images), 		# 28×28×1000 ...
+				  
+				  summary(y_train),		# 60000-element Vector{Int64}
+				  summary(labels),		# 1000-...
+				  
+				  summary(X_test), 		# 28×28×10000 Array{Float32, 3}
+				  summary(y_test)) 		# 10000-element Vector{Int64}
+
+# ╔═╡ 00000000-0000-0000-0000-000000000001
+PLUTO_PROJECT_TOML_CONTENTS = """
+[deps]
+MLDatasets = "eb30cadb-4394-5ae3-aed4-317e484a6458"
+
+[compat]
+MLDatasets = "~0.7.20"
+"""
+
+# ╔═╡ 00000000-0000-0000-0000-000000000002
+PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
 julia_version = "1.12.4"
 manifest_format = "2.0"
-project_hash = "12e37df0a12a1aea643c4039e53be1a6b7efbf64"
+project_hash = "a8aa4d865a84b8052cb8be5135b87c64b55b08ef"
 
 [[deps.Accessors]]
 deps = ["CompositionsBase", "ConstructionBase", "Dates", "InverseFunctions", "MacroTools"]
@@ -400,11 +449,6 @@ version = "0.6.2"
 git-tree-sha1 = "83cb0092e2792b9e3a865b6655e88f5b862607e2"
 uuid = "c27321d9-0574-5035-807b-f59d2c89b15c"
 version = "1.4.0"
-
-[[deps.Grok]]
-path = "."
-uuid = "741f94ce-7c44-4664-a236-7dbfa09f3eda"
-version = "0.1.0"
 
 [[deps.HDF5]]
 deps = ["Compat", "HDF5_jll", "Libdl", "MPIPreferences", "Mmap", "Preferences", "Printf", "Random", "Requires", "UUIDs"]
@@ -1262,3 +1306,16 @@ version = "1.64.0+1"
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
 uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 version = "17.7.0+0"
+"""
+
+# ╔═╡ Cell order:
+# ╠═023a4bea-fe56-11f0-aa51-73cdd34844e0
+# ╠═6eb3e073-375d-44d8-9457-696cbea63520
+# ╠═a6b03d92-169b-4aeb-8393-c6e2e13de4f8
+# ╠═248acf45-d401-484c-9623-5a335614cd21
+# ╠═57c046b3-602e-4845-ad65-1d7a341c2d5c
+# ╠═b3660428-f4b5-40ef-b935-fa1753ca29de
+# ╠═5e7f6ea7-946c-4f53-8db0-1c442737b25b
+# ╠═4cfd9a0c-8a33-402d-a426-dee73ea03c88
+# ╟─00000000-0000-0000-0000-000000000001
+# ╟─00000000-0000-0000-0000-000000000002
