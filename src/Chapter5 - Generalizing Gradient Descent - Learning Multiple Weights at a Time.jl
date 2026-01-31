@@ -128,6 +128,32 @@ function gradient_descent(
 	return weights
 end
 
+# ╔═╡ 75aed94c-9c71-4cb4-9c05-a558182ad06a
+function outer_prod(v1::Vector{R}, v2::Vector{R})::Matrix{R} where R<:Real
+	return v1 * v2'
+end
+
+# ╔═╡ 8d414ac0-57ad-472f-ad92-1e634d9c0b30
+function gradient_descent(
+	input::Vector{R},
+	label::Vector{R},
+	weights::Matrix{R},
+	alpha::R,
+)::Matrix{R} where R<:Real
+	
+	pred::Vector{R} = neural_network(input, weights)
+	
+	delta::Vector{R} = pred .- label
+	error::Vector{R} = delta .^ 2
+	
+	weight_deltas = outer_prod(input, delta)
+	weights -= alpha * weight_deltas
+	
+	@info "Status:" pred error delta weights weight_deltas
+	
+	return weights
+end
+
 # ╔═╡ 7b07298d-801c-48fb-a0b9-060ec9b48ade
 gradient_descent([.1, .2, -.1], .01, nothing)
 
@@ -186,8 +212,8 @@ let
 			   .1 .2 .0; #win?
 			   .0 1.3 .1] #sad?
 	
-	pred = neural_network(input, weights)
-	@assert pred ≈ [0.555, 0.98, 0.965]
+	alpha = 0.1
+	gradient_descent(input, label, weights, alpha)
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -247,6 +273,8 @@ version = "5.15.0+0"
 # ╠═6bebba56-8674-4a5e-aaa3-595f78f5b747
 # ╠═3a33b320-3a13-4b8f-aaa2-d3d11c61d7ee
 # ╠═2f98e204-4811-4002-b17f-c516a112e075
+# ╠═75aed94c-9c71-4cb4-9c05-a558182ad06a
+# ╠═8d414ac0-57ad-472f-ad92-1e634d9c0b30
 # ╠═7b07298d-801c-48fb-a0b9-060ec9b48ade
 # ╟─8742b3e1-d64d-40e3-b2fc-cb1f31fb66aa
 # ╠═3c56a7b9-fabd-4e4e-817b-d83ff31a40f1
