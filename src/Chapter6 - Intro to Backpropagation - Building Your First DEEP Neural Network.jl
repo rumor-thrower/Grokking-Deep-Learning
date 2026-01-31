@@ -48,6 +48,10 @@ function fit_factory(input::Bits, goal::Bool, alpha::Float64)::Function where Bi
 	end
 end
 
+# ╔═╡ 0580a298-6fd6-46aa-aebf-9d0f4ad7c35f
+fit_factory((input, goal), alpha::Float64)::Function =
+	fit_factory(input, goal, alpha)
+
 # ╔═╡ 226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
 let (inputs, goals) = get_inputs_and_goals()
 	input, goal = first.([inputs, goals])
@@ -79,7 +83,39 @@ md"""
 """
 
 # ╔═╡ 309d4b06-274a-4390-83bf-c75cd722202e
+function fit(
+	init_weights::Vector{R},
+	alpha::R,
+	max_epoch::Int
+)::Vector{R} where R<:Real
 
+	# sample = (input, goal)
+	samples = get_inputs_and_goals()
+
+	# fitter = fit_factory(sample, alpha)
+	sample_to_fitter::Function = Base.Fix2(fit_factory, alpha)
+
+	fitters_per_sample::Vector{Function} = map(sample_to_fitter, zip(samples...))
+
+	fit_weights_once(weights::Vector{R}, fit::Function)::Vector{R} where R<:Real =
+		fit(weights, 1)
+
+	function batch_update(weights::Vector{R}, epoch::Int)::Vector{R} where R<:Real
+		@info "Begin $epoch th epoch"
+		# update weight on all sample
+		# weights = fit(weights, 1)
+		return reduce(fit_weights_once, fitters_per_sample, init = weights)
+	end
+	
+	weights = reduce(batch_update, 1:max_epoch, init = init_weights)
+	
+	@info "Result:" weights
+
+	return weights
+end
+
+# ╔═╡ 10369220-f87d-4f0b-9477-74ac7121b2f1
+fit([.5, .48, -.7], .1, 40)
 
 # ╔═╡ 9309ea1d-de47-4a98-9989-c3cfe50dc0a8
 md"""
@@ -161,11 +197,13 @@ version = "5.15.0+0"
 # ╠═941e115e-307c-4aec-a6d6-5f90866ecc3e
 # ╠═9961822e-8687-49fe-8e76-2d456334ee57
 # ╠═34cabbbf-a02f-410d-9e0f-43493eec46f1
+# ╠═0580a298-6fd6-46aa-aebf-9d0f4ad7c35f
 # ╠═226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
 # ╟─20f1e96c-613d-42f4-928a-3c4f033263e2
 # ╠═0ecea74e-0443-4d1a-9843-b1a8bee23eb5
 # ╟─e2ea141a-560e-4f68-be97-44dbfc749a0f
 # ╠═309d4b06-274a-4390-83bf-c75cd722202e
+# ╠═10369220-f87d-4f0b-9477-74ac7121b2f1
 # ╟─9309ea1d-de47-4a98-9989-c3cfe50dc0a8
 # ╠═3c2fa6d0-0e3b-4f7e-925b-1486e52b6388
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
