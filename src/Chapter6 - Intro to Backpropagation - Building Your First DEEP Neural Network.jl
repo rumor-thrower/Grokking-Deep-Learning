@@ -168,6 +168,15 @@ import Random
 # ╔═╡ 18836503-681e-41bf-b214-3db0af8d14a2
 Random.seed!(1)
 
+# ╔═╡ 43386f27-ada9-483d-bc18-9c3ddbff0503
+"""
+	normalize_neg1_to_1(M::Matrix{R})::Matrix{R} where R<:Real
+
+Normalize matrix values from [0, 1) to [-1, 1).
+"""
+function normalize_neg1_to_1(M::Matrix{R})::Matrix{R} where R<:Real
+	return @. 2 * M - 1
+end
 
 # ╔═╡ 4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 md"""
@@ -261,6 +270,7 @@ version = "5.15.0+0"
 # ╟─9309ea1d-de47-4a98-9989-c3cfe50dc0a8
 # ╠═3c2fa6d0-0e3b-4f7e-925b-1486e52b6388
 # ╠═18836503-681e-41bf-b214-3db0af8d14a2
+# ╟─43386f27-ada9-483d-bc18-9c3ddbff0503
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 # ╟─75a9be55-0dd0-47c0-84b2-32b87d797132
