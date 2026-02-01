@@ -186,6 +186,19 @@ Generate random weight matrices between -1 and 1 for given size tuples.
 """
 init_rand_weight::Function = normalize_neg1_to_1 ∘ splat(rand)
 
+# ╔═╡ 1d6130b4-0a5b-4fd4-822a-9031608717c3
+"""
+	relu(x::R)::R where R<:Real
+
+Apply `ReLU` activation function.
+
+# Returns
+Maximum of input `x` and zero for input type `R`.
+"""
+function relu(x::R)::R where R<:Real
+	return max(zero(R), x)
+end
+
 # ╔═╡ 717ae1b7-e5b6-497d-bcc5-d0c037097e07
 let # Load supervised training data
 	(inputs, goals) = get_inputs_and_goals()
@@ -293,6 +306,7 @@ version = "5.15.0+0"
 # ╠═18836503-681e-41bf-b214-3db0af8d14a2
 # ╟─43386f27-ada9-483d-bc18-9c3ddbff0503
 # ╟─ce062beb-067f-4f5b-b81c-f310a8938630
+# ╟─1d6130b4-0a5b-4fd4-822a-9031608717c3
 # ╠═717ae1b7-e5b6-497d-bcc5-d0c037097e07
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
