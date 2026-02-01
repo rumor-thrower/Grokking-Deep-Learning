@@ -178,6 +178,14 @@ function normalize_neg1_to_1(M::Matrix{R})::Matrix{R} where R<:Real
 	return @. 2 * M - 1
 end
 
+# ╔═╡ ce062beb-067f-4f5b-b81c-f310a8938630
+"""
+	init_rand_weight(sizes::Vector{Tuple{Int, Int}})::Vector{Matrix{Float64}}
+
+Generate random weight matrices between -1 and 1 for given size tuples.
+"""
+init_rand_weight::Function = normalize_neg1_to_1 ∘ splat(rand)
+
 # ╔═╡ 4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 md"""
 # Backpropagation in Code
@@ -271,6 +279,7 @@ version = "5.15.0+0"
 # ╠═3c2fa6d0-0e3b-4f7e-925b-1486e52b6388
 # ╠═18836503-681e-41bf-b214-3db0af8d14a2
 # ╟─43386f27-ada9-483d-bc18-9c3ddbff0503
+# ╟─ce062beb-067f-4f5b-b81c-f310a8938630
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 # ╟─75a9be55-0dd0-47c0-84b2-32b87d797132
