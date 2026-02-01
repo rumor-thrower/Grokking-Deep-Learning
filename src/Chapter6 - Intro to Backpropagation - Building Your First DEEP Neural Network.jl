@@ -163,6 +163,10 @@ md"""
 """
 
 # ╔═╡ 3c2fa6d0-0e3b-4f7e-925b-1486e52b6388
+import Random
+
+# ╔═╡ 18836503-681e-41bf-b214-3db0af8d14a2
+Random.seed!(1)
 
 
 # ╔═╡ 4c8c2a7a-de99-4a03-a07f-685f1633cf5e
@@ -193,6 +197,7 @@ md"""
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -201,7 +206,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.12.4"
 manifest_format = "2.0"
-project_hash = "f352ceee806168c8ae38887a01d7bae6ca62470b"
+project_hash = "a4de803ffbed71b36720c404a0d3a578794e2972"
 
 [[deps.Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
@@ -226,6 +231,15 @@ deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
 uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
 version = "0.3.29+0"
 
+[[deps.Random]]
+deps = ["SHA"]
+uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+version = "1.11.0"
+
+[[deps.SHA]]
+uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+version = "0.7.0"
+
 [[deps.libblastrampoline_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850b90-86db-534c-a0d3-1478176c7d93"
@@ -246,6 +260,7 @@ version = "5.15.0+0"
 # ╠═10369220-f87d-4f0b-9477-74ac7121b2f1
 # ╟─9309ea1d-de47-4a98-9989-c3cfe50dc0a8
 # ╠═3c2fa6d0-0e3b-4f7e-925b-1486e52b6388
+# ╠═18836503-681e-41bf-b214-3db0af8d14a2
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 # ╟─75a9be55-0dd0-47c0-84b2-32b87d797132
