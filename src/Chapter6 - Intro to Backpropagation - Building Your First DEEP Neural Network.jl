@@ -222,6 +222,33 @@ function advance_layer(
 	return relu.(layer * weights)
 end
 
+# ╔═╡ e65644cb-b3ff-4e18-866e-61d27818edb7
+"""
+	forward_propagate(
+		layer_in::Row,
+		weight_mats::Vector{Matrix{R}}
+	)::Vector{Matrix{R}} where {Row<:AbstractVector{<:Real}, R<:Real}
+
+Perform forward propagation through the network.
+"""
+function forward_propagate(
+	layer_in::Row,
+	weight_mats::Vector{Matrix{R}}
+)::Vector{Matrix{R}} where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	layer_out_prev::Matrix{R} =
+		# layer_out = advance_layer(layer_in, weights)
+		reduce(advance_layer, weight_mats[begin:end-1]; init = layer_in')
+	
+	layer_out::Matrix{R} = layer_out_prev * weight_mats[end]
+
+	# subsequent_layers
+	return [
+		layer_out_prev,
+		layer_out
+	]
+end
+
 # ╔═╡ 717ae1b7-e5b6-497d-bcc5-d0c037097e07
 let # Load supervised training data
 	(inputs, goals) = get_inputs_and_goals()
@@ -233,6 +260,13 @@ let # Load supervised training data
 		3 => hidden_size,
 		hidden_size => 1
 	])
+	
+	layer_in, goal = first.([inputs, goals])
+
+	# Forward propagation
+	layer_mid, layer_out = forward_propagate(layer_in, weight_mats)
+	
+	@info "Status:" layer_in layer_mid layer_out weight_mats
 end
 
 # ╔═╡ 4c8c2a7a-de99-4a03-a07f-685f1633cf5e
@@ -331,6 +365,7 @@ version = "5.15.0+0"
 # ╟─ce062beb-067f-4f5b-b81c-f310a8938630
 # ╟─1d6130b4-0a5b-4fd4-822a-9031608717c3
 # ╟─8514e517-debe-4381-a7c1-3dba9dc107ee
+# ╟─e65644cb-b3ff-4e18-866e-61d27818edb7
 # ╠═717ae1b7-e5b6-497d-bcc5-d0c037097e07
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
