@@ -69,6 +69,23 @@ function fit_factory(
 	end
 end
 
+# ╔═╡ 0580a298-6fd6-46aa-aebf-9d0f4ad7c35f
+"""
+	fit_factory(
+		sample::Tuple{Row, Bool},
+		alpha::R
+	)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
+
+Variant of `fit_factory` that takes a sample tuple instead of separate input and goal.
+"""
+function fit_factory(
+	sample::Tuple{Row, Bool},
+	alpha::R
+)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
+	input, goal = sample
+	return fit_factory(input, goal, alpha)
+end
+
 # ╔═╡ 226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
 let (inputs, goals) = get_inputs_and_goals()
 	input, goal = first.([inputs, goals])
@@ -182,6 +199,7 @@ version = "5.15.0+0"
 # ╟─941e115e-307c-4aec-a6d6-5f90866ecc3e
 # ╠═9961822e-8687-49fe-8e76-2d456334ee57
 # ╟─34cabbbf-a02f-410d-9e0f-43493eec46f1
+# ╟─0580a298-6fd6-46aa-aebf-9d0f4ad7c35f
 # ╠═226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
 # ╟─20f1e96c-613d-42f4-928a-3c4f033263e2
 # ╠═0ecea74e-0443-4d1a-9843-b1a8bee23eb5
