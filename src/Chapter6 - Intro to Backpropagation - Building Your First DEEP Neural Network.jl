@@ -46,11 +46,11 @@ function fit_factory(
 )::Function where {Row<:AbstractVector{<:Real}, R<:Real}
 	
 	"""
-		fit(weights::W, epochs_left::Int)::W where W<:VecOrMat{<:Real}
+			fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
 	
 	Fits the neural network weights for the given number of epochs.
 	"""
-	function fit(weights::W, epochs_left::Int)::W where W<:VecOrMat{<:Real}
+	function fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
 		
 		if epochs_left < 1
 			return weights
@@ -72,17 +72,17 @@ end
 # ╔═╡ 0580a298-6fd6-46aa-aebf-9d0f4ad7c35f
 """
 	fit_factory(
-		sample::Tuple{Row, Bool},
+		(input, goal)::Tuple{Row, Bool},
 		alpha::R
 	)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
 
 Variant of `fit_factory` that takes a sample tuple instead of separate input and goal.
 """
 function fit_factory(
-	sample::Tuple{Row, Bool},
+	(input, goal)::Tuple{Row, Bool},
 	alpha::R
 )::Function where {Row<:AbstractVector{<:Real}, R<:Real}
-	input, goal = sample
+	
 	return fit_factory(input, goal, alpha)
 end
 
