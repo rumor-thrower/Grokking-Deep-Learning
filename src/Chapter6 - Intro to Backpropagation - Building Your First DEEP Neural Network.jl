@@ -30,60 +30,77 @@ end
 import LinearAlgebra
 
 # ╔═╡ 34cabbbf-a02f-410d-9e0f-43493eec46f1
-"""
-	fit_factory(
+begin
+	"""
+		fit_factory(
+			input::Row,
+			goal::Bool,
+			alpha::R
+		)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	Returns a function that fits a neural network for a single input-goal pair with learning rate `alpha`.
+	"""
+	function fit_factory(
 		input::Row,
 		goal::Bool,
 		alpha::R
 	)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
-
-Returns a function that fits a neural network for a single input-goal pair with learning rate `alpha`.
-"""
-function fit_factory(
-	input::Row,
-	goal::Bool,
-	alpha::R
-)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
-	
-	"""
-			fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
-	
-	Fits the neural network weights for the given number of epochs.
-	"""
-	function fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
 		
-		if epochs_left < 1
-			return weights
+		"""
+			fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
+		
+		Fits the neural network weights for the given number of epochs.
+		"""
+	function fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
+			
+			if epochs_left < 1
+				return weights
+			end
+	
+			R2 = eltype(W)
+		
+			pred::R2 = LinearAlgebra.dot(input, weights)
+			delta::R2 = pred - goal
+			error::R2 = delta ^ 2
+			weights::W -= alpha * input * delta
+		
+			@debug "Status:" input error pred
+			
+			return fit(weights, epochs_left - 1)
 		end
 		
-		R2 = eltype(W)
-		
-		pred::R2 = LinearAlgebra.dot(input, weights)
-		delta::R2 = pred - goal
-		error::R2 = delta ^ 2
-		weights::W -= alpha * input * delta
-	
-		@debug "Status:" input error pred
-		
-		return fit(weights, epochs_left - 1)
-	end
-end
+		function fit(weight_mats, epochs_left::Int)
+			
+			subsequent_layers = forward_propagate(input, weight_mats)
+			
+			L_out = subsequent_layers[end]
+			pred_f, ΔL_out = calc_loss(L_out, goal)
+			
+			ΔWs = back_propagate(input, subsequent_layers, ΔL_out, weight_mats)
+			weight_mats .-= alpha .* ΔWs
+			
+			# L_out_error = sum(abs2, ΔL_out)
+			return weight_mats
+		end
 
-# ╔═╡ 0580a298-6fd6-46aa-aebf-9d0f4ad7c35f
-"""
-	fit_factory(
+		return fit
+	end
+	
+	"""
+		fit_factory(
+			(input, goal)::Tuple{Row, Bool},
+			alpha::R
+		)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	Variant of `fit_factory` that takes a sample tuple instead of separate input and goal.
+	"""
+	function fit_factory(
 		(input, goal)::Tuple{Row, Bool},
 		alpha::R
 	)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
-
-Variant of `fit_factory` that takes a sample tuple instead of separate input and goal.
-"""
-function fit_factory(
-	(input, goal)::Tuple{Row, Bool},
-	alpha::R
-)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
-	
-	return fit_factory(input, goal, alpha)
+		
+		return fit_factory(input, goal, alpha)
+	end
 end
 
 # ╔═╡ 226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
@@ -441,7 +458,6 @@ version = "5.15.0+0"
 # ╟─941e115e-307c-4aec-a6d6-5f90866ecc3e
 # ╠═9961822e-8687-49fe-8e76-2d456334ee57
 # ╟─34cabbbf-a02f-410d-9e0f-43493eec46f1
-# ╟─0580a298-6fd6-46aa-aebf-9d0f4ad7c35f
 # ╠═226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
 # ╟─20f1e96c-613d-42f4-928a-3c4f033263e2
 # ╠═0ecea74e-0443-4d1a-9843-b1a8bee23eb5
