@@ -117,7 +117,45 @@ md"""
 """
 
 # ╔═╡ 309d4b06-274a-4390-83bf-c75cd722202e
+"""
+	train_network(
+		initial_weights::Vector{R},
+		alpha::R,
+		max_epoch::Int
+	)::Vector{R} where R<:Real
 
+Trains a neural network with initial weights `initial_weights`, learning rate `alpha`, and for `max_epoch` epochs over the entire dataset.
+"""
+function train_network(
+	initial_weights::W,
+	alpha::R,
+	max_epoch::Int
+)::W where {R<:Real, W<:Vector{R}}
+	
+	# sample = (input, goal)
+	samples = get_inputs_and_goals()
+	
+	# fitter = fit_factory(sample, alpha)
+	sample_to_fitter::Function = Base.Fix2(fit_factory, alpha)
+	
+	fitters_per_sample::Vector{Function} = zip(samples...) .|> sample_to_fitter
+	
+	function fit_weights_once(weights::W, fit::Function)::W where W<:Vector{<:Real}
+		return fit(weights, 1)
+	end
+	
+	function batch_update(weights::W, epoch::Int)::W where W<:Vector{<:Real}
+		@info "Begin $epoch th epoch"
+		# update weight on all sample
+		# weights = fit(weights, 1)
+		return reduce(fit_weights_once, fitters_per_sample; init = weights)
+	end
+	
+	return reduce(batch_update, 1:max_epoch; init = initial_weights)
+end
+
+# ╔═╡ 10369220-f87d-4f0b-9477-74ac7121b2f1
+train_network([.5, .48, -.7], .1, 40)
 
 # ╔═╡ 9309ea1d-de47-4a98-9989-c3cfe50dc0a8
 md"""
@@ -204,7 +242,8 @@ version = "5.15.0+0"
 # ╟─20f1e96c-613d-42f4-928a-3c4f033263e2
 # ╠═0ecea74e-0443-4d1a-9843-b1a8bee23eb5
 # ╟─e2ea141a-560e-4f68-be97-44dbfc749a0f
-# ╠═309d4b06-274a-4390-83bf-c75cd722202e
+# ╟─309d4b06-274a-4390-83bf-c75cd722202e
+# ╠═10369220-f87d-4f0b-9477-74ac7121b2f1
 # ╟─9309ea1d-de47-4a98-9989-c3cfe50dc0a8
 # ╠═3c2fa6d0-0e3b-4f7e-925b-1486e52b6388
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
