@@ -324,6 +324,18 @@ function forward_propagate(
 	]
 end
 
+# ╔═╡ bee24127-1934-4635-9a36-090e26eab76d
+"""
+	calc_loss(layer_out::Matrix{R}, goal::Bool)::Tuple{R, Matrix{R}} where R<:Real
+
+Calculate the loss and deltas for the output layer.
+"""
+function calc_loss(layer_out::Matrix{R}, goal::Bool)::Tuple{R, Matrix{R}} where R<:Real
+	pred_f::R = only(layer_out)
+	deltas::Matrix{R} = layer_out .- goal
+	return pred_f, deltas
+end
+
 # ╔═╡ 717ae1b7-e5b6-497d-bcc5-d0c037097e07
 let # Load supervised training data
 	(inputs, goals) = get_inputs_and_goals()
@@ -341,7 +353,11 @@ let # Load supervised training data
 	# Forward propagation
 	layer_mid, layer_out = forward_propagate(layer_in, weight_mats)
 	
-	@info "Status:" layer_in layer_mid layer_out weight_mats
+	pred_f, deltas = calc_loss(layer_out, goal)
+	pred_b::Bool = pred_f > (true - false) / 2
+	delta::Float64 = only(deltas)
+	
+	@info "Status:" layer_in layer_mid layer_out pred_b goal delta weight_mats
 end
 
 # ╔═╡ 4c8c2a7a-de99-4a03-a07f-685f1633cf5e
@@ -515,6 +531,7 @@ version = "5.15.0+0"
 # ╟─89f3c7c3-0c68-4c56-860f-eba8a5d7428d
 # ╟─8514e517-debe-4381-a7c1-3dba9dc107ee
 # ╟─e65644cb-b3ff-4e18-866e-61d27818edb7
+# ╟─bee24127-1934-4635-9a36-090e26eab76d
 # ╠═717ae1b7-e5b6-497d-bcc5-d0c037097e07
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╟─c3aab21b-589b-4b90-a89f-30d387ff7007
