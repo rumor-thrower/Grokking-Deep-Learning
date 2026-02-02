@@ -10,7 +10,7 @@ md"""
 """
 
 # ╔═╡ 941e115e-307c-4aec-a6d6-5f90866ecc3e
-function get_input_and_goal()::Tuple{BitVector, Bool}
+function get_inputs_and_goals()::Tuple{RowSlices, Base.Generator}
 	streetlights = BitMatrix([ 1 0 1 ;
 							   0 1 1 ;
 							   0 0 1 ;
@@ -20,10 +20,10 @@ function get_input_and_goal()::Tuple{BitVector, Bool}
 	
 	walk_vs_stop = BitVector([ 0, 1, 0, 1, 1, 0 ])
 
-	input::BitVector = streetlights[begin, :]
-	goal::Bool = walk_vs_stop[begin]
+	inputs::RowSlices = eachrow(streetlights)
+	goals::Base.Generator = (bool for bool in walk_vs_stop)
 
-	return (input, goal)
+	return (inputs, goals)
 end
 
 # ╔═╡ 9961822e-8687-49fe-8e76-2d456334ee57
@@ -70,7 +70,8 @@ function fit_factory(
 end
 
 # ╔═╡ 226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
-let (input, goal) = get_input_and_goal()
+let (inputs, goals) = get_inputs_and_goals()
+	input, goal = first.([inputs, goals])
 	
 	fit::Function = fit_factory(input, goal, .1)
 	
