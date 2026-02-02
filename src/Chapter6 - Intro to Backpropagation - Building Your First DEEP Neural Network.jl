@@ -275,6 +275,38 @@ md"""
 # Backpropagation in Code
 """
 
+# ╔═╡ c3aab21b-589b-4b90-a89f-30d387ff7007
+"""
+	back_propagate(
+		L_in::Row,
+		subsequent_layers::Vector{Matrix{R}},
+		ΔL_out::Matrix{R},
+		weight_mats::Vector{Matrix{R}}
+	)::Vector{Matrix{R}} where {Row<:AbstractVector{<:Real}, R<:Real}
+
+Perform backpropagation to calculate weight updates.
+"""
+function back_propagate(
+	L_in::Row,
+	subsequent_layers::Vector{Matrix{R}},
+	ΔL_out::Matrix{R},
+	weight_mats::Vector{Matrix{R}}
+)::Vector{Matrix{R}} where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	relu2_deriv::Function = ReLU.deriv_factory(.0)
+	
+	L1::Matrix{R} = subsequent_layers[end - 1]
+	ΔL1::Matrix{R} = (ΔL_out * weight_mats[2]') .* relu2_deriv.(L1)
+	
+	# @debug "Propagated:" ΔL1
+	
+	# weight_Δs
+	return [
+		L_in * ΔL1,
+		L1' * ΔL_out
+	]
+end
+
 # ╔═╡ bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 
 
@@ -367,6 +399,7 @@ version = "5.15.0+0"
 # ╟─89f3c7c3-0c68-4c56-860f-eba8a5d7428d
 # ╠═717ae1b7-e5b6-497d-bcc5-d0c037097e07
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
+# ╟─c3aab21b-589b-4b90-a89f-30d387ff7007
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 # ╟─75a9be55-0dd0-47c0-84b2-32b87d797132
 # ╠═8a622db6-aff0-407d-a65b-aaca49e9b17d
