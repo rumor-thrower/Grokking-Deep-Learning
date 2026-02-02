@@ -199,6 +199,59 @@ function relu(x::R)::R where R<:Real
 	return max(zero(R), x)
 end
 
+# ╔═╡ 89f3c7c3-0c68-4c56-860f-eba8a5d7428d
+begin
+	"""
+		relu2deriv_factory()::Function
+	
+	# Returns
+	Derivative function of `ReLU`. At `x = 0`, throws `ArgumentError`.
+
+	# Explanation
+	The derivative of `ReLU` is:
+	- `0` for `x < 0`
+	- `1` for `x > 0`
+	- undefined at `x = 0` (since the left-hand limit and right-hand limit do not agree).
+	
+	# Example
+	```julia
+	relu2deriv::Function = relu2deriv_factory()
+	relu2deriv(-.5)
+	# 0
+	relu2deriv(.5)
+	# 1
+	relu2deriv(.0)
+	# throws ArgumentError
+	```
+	"""
+	relu2deriv_factory()::Function =
+		function relu2deriv(x::R) where R<:Real
+			handle_zero(x::R) = throw(ArgumentError("The derivative at x = $x is undefined"))
+			handler::Function = x |> iszero ? handle_zero : R ∘ !signbit
+			return handler(x)
+		end
+	
+	"""
+		relu2deriv_factory(fallback::R)::Function where R<:Real
+	
+	Get the derivative function of `ReLU` which uses `fallback` at `x = 0`.
+	
+	# Example
+	```julia
+	relu2deriv::Function = relu2deriv_factory(.0)
+	relu2deriv(-.5)
+	# 0
+	relu2deriv(.5)
+	# 1
+	relu2deriv(.0)
+	# 0.0
+	```
+	"""
+	function relu2deriv_factory(fallback::R)::Function where R<:Real
+		relu_deriv(x::R)::R = ifelse(x |> iszero, fallback, !signbit(x))
+	end
+end
+
 # ╔═╡ 717ae1b7-e5b6-497d-bcc5-d0c037097e07
 let # Load supervised training data
 	(inputs, goals) = get_inputs_and_goals()
@@ -307,6 +360,7 @@ version = "5.15.0+0"
 # ╟─43386f27-ada9-483d-bc18-9c3ddbff0503
 # ╟─ce062beb-067f-4f5b-b81c-f310a8938630
 # ╟─1d6130b4-0a5b-4fd4-822a-9031608717c3
+# ╟─89f3c7c3-0c68-4c56-860f-eba8a5d7428d
 # ╠═717ae1b7-e5b6-497d-bcc5-d0c037097e07
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
