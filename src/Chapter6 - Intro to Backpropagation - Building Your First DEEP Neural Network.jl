@@ -440,6 +440,43 @@ function train_network(
 	return reduce(batch_update, 1:max_epoch; init = weight_mats)
 end
 
+# ╔═╡ 1babc28d-a351-4493-9613-4094a8421a0a
+"""
+	predict(
+		input::Row,
+		goal::Bool,
+		weight_mats::Vector{Matrix{R}}
+	)::Tuple{R, R} where {Row<:AbstractVector{<:Real}, R<:Real}
+
+Make a prediction with the neural network and calculate error.
+
+# Returns
+- `pred_f::R`: The predicted output.
+- 'error::R`: The sum of squared errors.
+
+# Example
+```julia
+input = [1.0, 0.0, 1.0]
+goal = true
+weight_mats = [randn(3, 4), randn(4, 1)]
+pred_f, error = predict(input, goal, weight_mats)
+```
+"""
+function predict(
+	input::Row,
+	goal::Bool,
+	weight_mats::Vector{Matrix{R}}
+)::Tuple{R, R} where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	subsequent_layers::Vector{Matrix{R}} = forward_propagate(input, weight_mats)
+	L_out::Matrix{R} = subsequent_layers[end]
+	
+	pred_f, ΔL_out = calc_loss(L_out, goal)
+	error::R = sum(abs2, ΔL_out)
+	
+	return pred_f, error
+end
+
 # ╔═╡ bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 
 
@@ -536,6 +573,7 @@ version = "5.15.0+0"
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╟─c3aab21b-589b-4b90-a89f-30d387ff7007
 # ╟─fcc97bac-1636-412c-a46e-7e643c582345
+# ╟─1babc28d-a351-4493-9613-4094a8421a0a
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 # ╟─75a9be55-0dd0-47c0-84b2-32b87d797132
 # ╠═8a622db6-aff0-407d-a65b-aaca49e9b17d
