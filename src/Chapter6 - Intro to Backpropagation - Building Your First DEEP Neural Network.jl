@@ -186,17 +186,75 @@ Generate random weight matrices between -1 and 1 for given size tuples.
 """
 init_rand_weight::Function = normalize_neg1_to_1 ∘ splat(rand)
 
-# ╔═╡ 1d6130b4-0a5b-4fd4-822a-9031608717c3
+# ╔═╡ 89f3c7c3-0c68-4c56-860f-eba8a5d7428d
+module ReLU
+
+export activate, deriv_factory
+
 """
-	relu(x::R)::R where R<:Real
+	activate(x::R)::R where R<:Real
 
 Apply `ReLU` activation function.
 
 # Returns
 Maximum of input `x` and zero for input type `R`.
 """
-function relu(x::R)::R where R<:Real
+function activate(x::R)::R where R<:Real
 	return max(zero(R), x)
+end
+
+"""
+	deriv_factory()::Function
+
+# Returns
+Derivative function of `ReLU`. At `x = 0`, throws `ArgumentError`.
+
+# Explanation
+The derivative of `ReLU` is:
+- `0` for `x < 0`
+- `1` for `x > 0`
+- undefined at `x = 0` (since the left-hand limit and right-hand limit do not agree).
+
+# Example
+```julia
+using ReLU
+deriv::Function = deriv_factory()
+deriv(-.5)
+# 0
+deriv(.5)
+# 1
+deriv(.0)
+# throws ArgumentError
+```
+"""
+deriv_factory()::Function =
+	function relu2deriv(x::R) where R<:Real
+		handle_zero(x::R) = throw(ArgumentError("The derivative at x = $x is undefined"))
+		handler::Function = x |> iszero ? handle_zero : R ∘ !signbit
+		return handler(x)
+	end
+
+"""
+	deriv_factory(fallback::R)::Function where R<:Real
+
+Get the derivative function of `ReLU` which uses `fallback` at `x = 0`.
+
+# Example
+```julia
+using ReLU
+deriv::Function = deriv_factory(.0)
+deriv(-.5)
+# 0
+deriv(.5)
+# 1
+deriv(.0)
+# 0.0
+```
+"""
+function deriv_factory(fallback::R)::Function where R<:Real
+	relu_deriv(x::R)::R = ifelse(x |> iszero, fallback, !signbit(x))
+end
+
 end
 
 # ╔═╡ 8514e517-debe-4381-a7c1-3dba9dc107ee
@@ -219,7 +277,7 @@ function advance_layer(
 	weights::Matrix{R}
 )::Matrix{R} where {L<:AbstractMatrix, R<:Real}
 	
-	return relu.(layer * weights)
+	return ReLU.activate.(layer * weights)
 end
 
 # ╔═╡ e65644cb-b3ff-4e18-866e-61d27818edb7
@@ -273,6 +331,38 @@ end
 md"""
 # Backpropagation in Code
 """
+
+# ╔═╡ c3aab21b-589b-4b90-a89f-30d387ff7007
+"""
+	back_propagate(
+		L_in::Row,
+		subsequent_layers::Vector{Matrix{R}},
+		ΔL_out::Matrix{R},
+		weight_mats::Vector{Matrix{R}}
+	)::Vector{Matrix{R}} where {Row<:AbstractVector{<:Real}, R<:Real}
+
+Perform backpropagation to calculate weight updates.
+"""
+function back_propagate(
+	L_in::Row,
+	subsequent_layers::Vector{Matrix{R}},
+	ΔL_out::Matrix{R},
+	weight_mats::Vector{Matrix{R}}
+)::Vector{Matrix{R}} where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	relu2_deriv::Function = ReLU.deriv_factory(.0)
+	
+	L1::Matrix{R} = subsequent_layers[end - 1]
+	ΔL1::Matrix{R} = (ΔL_out * weight_mats[2]') .* relu2_deriv.(L1)
+	
+	# @debug "Propagated:" ΔL1
+	
+	# weight_Δs
+	return [
+		L_in * ΔL1,
+		L1' * ΔL_out
+	]
+end
 
 # ╔═╡ bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 
@@ -363,11 +453,12 @@ version = "5.15.0+0"
 # ╠═18836503-681e-41bf-b214-3db0af8d14a2
 # ╟─43386f27-ada9-483d-bc18-9c3ddbff0503
 # ╟─ce062beb-067f-4f5b-b81c-f310a8938630
-# ╟─1d6130b4-0a5b-4fd4-822a-9031608717c3
+# ╟─89f3c7c3-0c68-4c56-860f-eba8a5d7428d
 # ╟─8514e517-debe-4381-a7c1-3dba9dc107ee
 # ╟─e65644cb-b3ff-4e18-866e-61d27818edb7
 # ╠═717ae1b7-e5b6-497d-bcc5-d0c037097e07
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
+# ╟─c3aab21b-589b-4b90-a89f-30d387ff7007
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 # ╟─75a9be55-0dd0-47c0-84b2-32b87d797132
 # ╠═8a622db6-aff0-407d-a65b-aaca49e9b17d
