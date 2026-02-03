@@ -478,7 +478,38 @@ function predict(
 end
 
 # ╔═╡ bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
+let samples = get_inputs_and_goals()
+	
+	alpha = 0.2
+	hidden_size = 4
+	
+	weight_mats::Vector{Matrix{Float64}} = init_rand_weight.([
+		3 => hidden_size,
+		hidden_size => 1
+	])
+	
+	# Test helper
+	arrange_result(input, goal::Bool)::Function =
+		(((pred, error)::Tuple{R, R}) where R<:Real) ->
+			((input, goal) => pred) => error
 
+	function model(weight_mats::Vector{Matrix{R}})::Function where R<:Real
+		((input, goal)::Tuple{Row, Bool} where Row<:AbstractVector{<:Real}) ->
+			predict(input, goal, weight_mats) |> arrange_result(input, goal)
+	end
+
+	function infer(samples, weight_mats::Vector{Matrix{R}}) where R<:Real
+		
+		result, errors = zip(samples...) .|> model(weight_mats) |> splat(zip)
+		error = sum(errors)
+		return result, error
+	end
+
+	weight_mats = train_network(samples, weight_mats, alpha, 60)
+	result, error = infer(samples, weight_mats)
+	
+	(; result, error, weight_mats)
+end
 
 # ╔═╡ 75a9be55-0dd0-47c0-84b2-32b87d797132
 md"""
