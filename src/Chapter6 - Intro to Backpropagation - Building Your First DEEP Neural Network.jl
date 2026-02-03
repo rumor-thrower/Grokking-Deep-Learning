@@ -381,6 +381,49 @@ function back_propagate(
 	]
 end
 
+# ╔═╡ fcc97bac-1636-412c-a46e-7e643c582345
+"""
+	train_network(
+		weight_mats::Vector{W},
+		alpha::Float64,
+		max_epoch::Int
+	)::Vector{W} where {W<:Matrix{<:Real}, R<:Real}
+
+Train a deep neural network with given initial weight matrices, learning rate, and number of epochs.
+"""
+function train_network(
+	samples,
+	weight_mats::Vector{W},
+	alpha::R,
+	max_epoch::Int
+)::Vector{W} where {W<:Matrix{<:Real}, R<:Real}
+	
+	# fitter = fit_factory(sample, alpha)
+	sample_to_fitter::Function = Base.Fix2(fit_factory, alpha)
+
+	fitters_per_sample::Vector{Function} = zip(samples...) .|> sample_to_fitter
+	
+	function fit_weights_once(
+		weight_mats::Vector{W},
+		fit::Function
+	)::Vector{W} where W<:Matrix{<:Real}
+		
+		return fit(weight_mats, 1)
+	end
+	
+	function batch_update(
+		weight_mats::Vector{W},
+		epoch::Int
+	)::Vector{W} where W<:Matrix{<:Real}
+		
+		# update weight on all sample
+		# weights = fit(weights, 1)
+		return reduce(fit_weights_once, fitters_per_sample; init = weight_mats)
+	end
+	
+	return reduce(batch_update, 1:max_epoch; init = weight_mats)
+end
+
 # ╔═╡ bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 
 
@@ -475,6 +518,7 @@ version = "5.15.0+0"
 # ╠═717ae1b7-e5b6-497d-bcc5-d0c037097e07
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╟─c3aab21b-589b-4b90-a89f-30d387ff7007
+# ╟─fcc97bac-1636-412c-a46e-7e643c582345
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 # ╟─75a9be55-0dd0-47c0-84b2-32b87d797132
 # ╠═8a622db6-aff0-407d-a65b-aaca49e9b17d
