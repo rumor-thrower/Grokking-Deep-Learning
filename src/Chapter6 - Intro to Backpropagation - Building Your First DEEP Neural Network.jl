@@ -30,60 +30,77 @@ end
 import LinearAlgebra
 
 # ╔═╡ 34cabbbf-a02f-410d-9e0f-43493eec46f1
-"""
-	fit_factory(
+begin
+	"""
+		fit_factory(
+			input::Row,
+			goal::Bool,
+			alpha::R
+		)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	Returns a function that fits a neural network for a single input-goal pair with learning rate `alpha`.
+	"""
+	function fit_factory(
 		input::Row,
 		goal::Bool,
 		alpha::R
 	)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
-
-Returns a function that fits a neural network for a single input-goal pair with learning rate `alpha`.
-"""
-function fit_factory(
-	input::Row,
-	goal::Bool,
-	alpha::R
-)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
-	
-	"""
-			fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
-	
-	Fits the neural network weights for the given number of epochs.
-	"""
-	function fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
 		
-		if epochs_left < 1
-			return weights
+		"""
+			fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
+		
+		Fits the neural network weights for the given number of epochs.
+		"""
+	function fit(weights::W, epochs_left::Int)::W where W<:Vector{<:Real}
+			
+			if epochs_left < 1
+				return weights
+			end
+	
+			R2 = eltype(W)
+		
+			pred::R2 = LinearAlgebra.dot(input, weights)
+			delta::R2 = pred - goal
+			error::R2 = delta ^ 2
+			weights::W -= alpha * input * delta
+		
+			@debug "Status:" input error pred
+			
+			return fit(weights, epochs_left - 1)
 		end
 		
-		R2 = eltype(W)
-		
-		pred::R2 = LinearAlgebra.dot(input, weights)
-		delta::R2 = pred - goal
-		error::R2 = delta ^ 2
-		weights::W -= alpha * input * delta
-	
-		@debug "Status:" input error pred
-		
-		return fit(weights, epochs_left - 1)
-	end
-end
+		function fit(weight_mats, epochs_left::Int)
+			
+			subsequent_layers = forward_propagate(input, weight_mats)
+			
+			L_out = subsequent_layers[end]
+			pred_f, ΔL_out = calc_loss(L_out, goal)
+			
+			ΔWs = back_propagate(input, subsequent_layers, ΔL_out, weight_mats)
+			weight_mats .-= alpha .* ΔWs
+			
+			# L_out_error = sum(abs2, ΔL_out)
+			return weight_mats
+		end
 
-# ╔═╡ 0580a298-6fd6-46aa-aebf-9d0f4ad7c35f
-"""
-	fit_factory(
+		return fit
+	end
+	
+	"""
+		fit_factory(
+			(input, goal)::Tuple{Row, Bool},
+			alpha::R
+		)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	Variant of `fit_factory` that takes a sample tuple instead of separate input and goal.
+	"""
+	function fit_factory(
 		(input, goal)::Tuple{Row, Bool},
 		alpha::R
 	)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
-
-Variant of `fit_factory` that takes a sample tuple instead of separate input and goal.
-"""
-function fit_factory(
-	(input, goal)::Tuple{Row, Bool},
-	alpha::R
-)::Function where {Row<:AbstractVector{<:Real}, R<:Real}
-	
-	return fit_factory(input, goal, alpha)
+		
+		return fit_factory(input, goal, alpha)
+	end
 end
 
 # ╔═╡ 226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
@@ -307,6 +324,18 @@ function forward_propagate(
 	]
 end
 
+# ╔═╡ bee24127-1934-4635-9a36-090e26eab76d
+"""
+	calc_loss(layer_out::Matrix{R}, goal::Bool)::Tuple{R, Matrix{R}} where R<:Real
+
+Calculate the loss and deltas for the output layer.
+"""
+function calc_loss(layer_out::Matrix{R}, goal::Bool)::Tuple{R, Matrix{R}} where R<:Real
+	pred_f::R = only(layer_out)
+	deltas::Matrix{R} = layer_out .- goal
+	return pred_f, deltas
+end
+
 # ╔═╡ 717ae1b7-e5b6-497d-bcc5-d0c037097e07
 let # Load supervised training data
 	(inputs, goals) = get_inputs_and_goals()
@@ -324,7 +353,11 @@ let # Load supervised training data
 	# Forward propagation
 	layer_mid, layer_out = forward_propagate(layer_in, weight_mats)
 	
-	@info "Status:" layer_in layer_mid layer_out weight_mats
+	pred_f, deltas = calc_loss(layer_out, goal)
+	pred_b::Bool = pred_f > (true - false) / 2
+	delta::Float64 = only(deltas)
+	
+	@info "Status:" layer_in layer_mid layer_out pred_b goal delta weight_mats
 end
 
 # ╔═╡ 4c8c2a7a-de99-4a03-a07f-685f1633cf5e
@@ -364,8 +397,119 @@ function back_propagate(
 	]
 end
 
-# ╔═╡ bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
+# ╔═╡ fcc97bac-1636-412c-a46e-7e643c582345
+"""
+	train_network(
+		weight_mats::Vector{W},
+		alpha::Float64,
+		max_epoch::Int
+	)::Vector{W} where {W<:Matrix{<:Real}, R<:Real}
 
+Train a deep neural network with given initial weight matrices, learning rate, and number of epochs.
+"""
+function train_network(
+	samples,
+	weight_mats::Vector{W},
+	alpha::R,
+	max_epoch::Int
+)::Vector{W} where {W<:Matrix{<:Real}, R<:Real}
+	
+	# fitter = fit_factory(sample, alpha)
+	sample_to_fitter::Function = Base.Fix2(fit_factory, alpha)
+
+	fitters_per_sample::Vector{Function} = zip(samples...) .|> sample_to_fitter
+	
+	function fit_weights_once(
+		weight_mats::Vector{W},
+		fit::Function
+	)::Vector{W} where W<:Matrix{<:Real}
+		
+		return fit(weight_mats, 1)
+	end
+	
+	function batch_update(
+		weight_mats::Vector{W},
+		epoch::Int
+	)::Vector{W} where W<:Matrix{<:Real}
+		
+		# update weight on all sample
+		# weights = fit(weights, 1)
+		return reduce(fit_weights_once, fitters_per_sample; init = weight_mats)
+	end
+	
+	return reduce(batch_update, 1:max_epoch; init = weight_mats)
+end
+
+# ╔═╡ 1babc28d-a351-4493-9613-4094a8421a0a
+"""
+	predict(
+		input::Row,
+		goal::Bool,
+		weight_mats::Vector{Matrix{R}}
+	)::Tuple{R, R} where {Row<:AbstractVector{<:Real}, R<:Real}
+
+Make a prediction with the neural network and calculate error.
+
+# Returns
+- `pred_f::R`: The predicted output.
+- 'error::R`: The sum of squared errors.
+
+# Example
+```julia
+input = [1.0, 0.0, 1.0]
+goal = true
+weight_mats = [randn(3, 4), randn(4, 1)]
+pred_f, error = predict(input, goal, weight_mats)
+```
+"""
+function predict(
+	input::Row,
+	goal::Bool,
+	weight_mats::Vector{Matrix{R}}
+)::Tuple{R, R} where {Row<:AbstractVector{<:Real}, R<:Real}
+	
+	subsequent_layers::Vector{Matrix{R}} = forward_propagate(input, weight_mats)
+	L_out::Matrix{R} = subsequent_layers[end]
+	
+	pred_f, ΔL_out = calc_loss(L_out, goal)
+	error::R = sum(abs2, ΔL_out)
+	
+	return pred_f, error
+end
+
+# ╔═╡ bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
+let samples = get_inputs_and_goals()
+	
+	alpha = 0.2
+	hidden_size = 4
+	
+	weight_mats::Vector{Matrix{Float64}} = init_rand_weight.([
+		3 => hidden_size,
+		hidden_size => 1
+	])
+	
+	# Test helper
+	arrange_result(input, goal::Bool)::Function =
+		(((pred, error)::Tuple{R, R}) where R<:Real) ->
+			((input, goal) => pred) => error
+
+	function model(weight_mats::Vector{Matrix{R}})::Function where R<:Real
+		((input, goal)::Tuple{Row, Bool} where Row<:AbstractVector{<:Real}) ->
+			predict(input, goal, weight_mats) |> arrange_result(input, goal)
+	end
+
+	function infer(samples, weight_mats::Vector{Matrix{R}}) where R<:Real
+		
+		result, errors = zip(samples...) .|> model(weight_mats) |> splat(zip)
+		error = sum(errors)
+		return result, error
+	end
+
+	weight_mats = train_network(samples, weight_mats, alpha, 60)
+	result, error = infer(samples, weight_mats)
+	
+	(; result, error, weight_mats)
+end
 
 # ╔═╡ 75a9be55-0dd0-47c0-84b2-32b87d797132
 md"""
@@ -373,7 +517,46 @@ md"""
 """
 
 # ╔═╡ 8a622db6-aff0-407d-a65b-aaca49e9b17d
+let # Load supervised training data
+	samples = get_inputs_and_goals()
 
+	# Hyperparameter
+	alpha = 0.2
+	hidden_size = 4
+	
+	# Initalize weight matrices randomly
+	weight_mats::Vector{Matrix{Float64}} = init_rand_weight.([
+		3 => hidden_size,
+		hidden_size => 1
+	])
+	
+	layer_in, goal = first.(samples)
+
+	# Forward propagation
+	layer_mid, layer_out = forward_propagate(layer_in, weight_mats)
+	
+	# Predict label & Calculate error
+	pred_f, layer_out_Δs = calc_loss(layer_out, goal)
+	layer_out_Δ::Float64 = only(layer_out_Δs)
+	
+	# Back propagation
+	relu2deriv::Function = ReLU.deriv_factory(.0)
+	
+	layer_mid_Δs = layer_out_Δs * weight_mats[end]'
+	@. layer_mid_Δs *= relu2deriv(layer_mid)
+	
+	# Update weights
+	weight_Δs = [
+		layer_in * layer_mid_Δs,
+		layer_mid' * layer_out_Δs
+	]
+	
+	@. weight_mats -= alpha * weight_Δs
+	
+	@info "Status:" layer_in layer_out goal layer_out_Δ
+	
+	weight_mats
+end
 
 # ╔═╡ f43339ba-0ad0-4d54-8b09-c2abceb69c4e
 md"""
@@ -441,7 +624,6 @@ version = "5.15.0+0"
 # ╟─941e115e-307c-4aec-a6d6-5f90866ecc3e
 # ╠═9961822e-8687-49fe-8e76-2d456334ee57
 # ╟─34cabbbf-a02f-410d-9e0f-43493eec46f1
-# ╟─0580a298-6fd6-46aa-aebf-9d0f4ad7c35f
 # ╠═226b0583-10a8-4fe7-a6c2-9fbd5136a4f1
 # ╟─20f1e96c-613d-42f4-928a-3c4f033263e2
 # ╠═0ecea74e-0443-4d1a-9843-b1a8bee23eb5
@@ -456,9 +638,12 @@ version = "5.15.0+0"
 # ╟─89f3c7c3-0c68-4c56-860f-eba8a5d7428d
 # ╟─8514e517-debe-4381-a7c1-3dba9dc107ee
 # ╟─e65644cb-b3ff-4e18-866e-61d27818edb7
+# ╟─bee24127-1934-4635-9a36-090e26eab76d
 # ╠═717ae1b7-e5b6-497d-bcc5-d0c037097e07
 # ╟─4c8c2a7a-de99-4a03-a07f-685f1633cf5e
 # ╟─c3aab21b-589b-4b90-a89f-30d387ff7007
+# ╟─fcc97bac-1636-412c-a46e-7e643c582345
+# ╟─1babc28d-a351-4493-9613-4094a8421a0a
 # ╠═bca9f1e1-1de2-4a6f-9bd5-861fd9fafea5
 # ╟─75a9be55-0dd0-47c0-84b2-32b87d797132
 # ╠═8a622db6-aff0-407d-a65b-aaca49e9b17d
