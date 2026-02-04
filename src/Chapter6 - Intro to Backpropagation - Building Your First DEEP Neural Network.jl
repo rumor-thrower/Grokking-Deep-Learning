@@ -517,7 +517,46 @@ md"""
 """
 
 # ╔═╡ 8a622db6-aff0-407d-a65b-aaca49e9b17d
+let # Load supervised training data
+	samples = get_inputs_and_goals()
 
+	# Hyperparameter
+	alpha = 0.2
+	hidden_size = 4
+	
+	# Initalize weight matrices randomly
+	weight_mats::Vector{Matrix{Float64}} = init_rand_weight.([
+		3 => hidden_size,
+		hidden_size => 1
+	])
+	
+	layer_in, goal = first.(samples)
+
+	# Forward propagation
+	layer_mid, layer_out = forward_propagate(layer_in, weight_mats)
+	
+	# Predict label & Calculate error
+	pred_f, layer_out_Δs = calc_loss(layer_out, goal)
+	layer_out_Δ::Float64 = only(layer_out_Δs)
+	
+	# Back propagation
+	relu2deriv::Function = ReLU.deriv_factory(.0)
+	
+	layer_mid_Δs = layer_out_Δs * weight_mats[end]'
+	@. layer_mid_Δs *= relu2deriv(layer_mid)
+	
+	# Update weights
+	weight_Δs = [
+		layer_in * layer_mid_Δs,
+		layer_mid' * layer_out_Δs
+	]
+	
+	@. weight_mats -= alpha * weight_Δs
+	
+	@info "Status:" layer_in layer_out goal layer_out_Δ
+	
+	weight_mats
+end
 
 # ╔═╡ f43339ba-0ad0-4d54-8b09-c2abceb69c4e
 md"""
