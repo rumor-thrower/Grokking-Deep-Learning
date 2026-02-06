@@ -57,3 +57,7 @@ function transform_data(
 	one_hot_labels = sparse(1:size(flattened_images, 2), labels .+ 1, true)
 	return flattened_images, one_hot_labels
 end
+
+# Load training and test data
+load_data(::Val{:train}) = transform_data(images, labels)
+load_data(::Val{:test}) = transform_data(test_images, test_labels)
