@@ -40,4 +40,16 @@ include("load_mnist_data.jl")
         @test sum(one_hot_labels[:, 2]) == 1 # Only one true in second column
     end
 
+    @testset "load_data function" begin
+        # Test loading training data
+        train_images, train_labels = load_data(Val(:train))
+        @test size(train_images, 1) == 784  # 28*28 pixels
+        @test size(train_labels, 2) == 10   # 10 classes
+
+        # Test loading test data
+        test_image_set, test_label_set = load_data(Val(:test))
+        @test size(test_image_set, 1) == 784   # 28*28 pixels
+        @test size(test_label_set, 2) == 10    # 10 classes
+    end
+
 end # @testset "MNIST Data Loading and Preprocessing"
