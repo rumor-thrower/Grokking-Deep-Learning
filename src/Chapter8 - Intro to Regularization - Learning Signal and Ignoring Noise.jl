@@ -21,7 +21,11 @@ md"""
 const (train_images, train_labels) = load_data(Val(:test))
 
 # ╔═╡ 8824f8c9-9ff6-459c-af5f-877519a54748
-
+# Set hyperparameters
+begin
+	alpha = 5e-3
+	iters = 40
+end
 
 # ╔═╡ bc60ca95-08c7-4bba-a1e1-bbffe07c7267
 # Initalize weight matrices randomly
@@ -35,7 +39,6 @@ weight_mats::Vector{Matrix{Float64}} = let
 		hidden_size => 1
 	])
 end
-
 
 # ╔═╡ f247e919-d416-43d6-953c-afc72721dec6
 md"""
