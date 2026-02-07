@@ -24,7 +24,19 @@ const (train_images, train_labels) = load_data(Val(:test))
 
 
 # ╔═╡ bc60ca95-08c7-4bba-a1e1-bbffe07c7267
+# Initialize weights at random for the 3-layer network
+weight_mats::Vector{Matrix{Float64}} = let
+    # Define network architecture
+	hidden_size = 40
+	pixels_per_image = size(train_images, 1)
+	num_labels = size(train_labels, 2)
 
+    # Initialize layers with random weights
+	init_rand_weight.([
+		pixels_per_image => hidden_size,
+		hidden_size => num_labels
+	])
+end
 
 # ╔═╡ f247e919-d416-43d6-953c-afc72721dec6
 md"""
