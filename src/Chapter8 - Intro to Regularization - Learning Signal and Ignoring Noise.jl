@@ -17,7 +17,7 @@ md"""
 """
 
 # ╔═╡ 48bf9b99-36fe-4b93-93be-7915a7f95f6c
-
+const (train_images, train_labels) = load_data(Val(:test))
 
 # ╔═╡ 8824f8c9-9ff6-459c-af5f-877519a54748
 
