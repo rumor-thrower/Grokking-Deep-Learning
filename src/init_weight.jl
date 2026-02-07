@@ -25,3 +25,19 @@ julia> normalize_neg1_to_1(M)
 function normalize_neg1_to_1(M::Matrix{R})::Matrix{R} where R<:Real
 	return @. 2 * M - 1
 end
+
+"""
+	init_rand_weight(dims::Tuple{Int, Int})::Matrix{Float64}
+
+Generate random weight matrices between -1 and 1 for given dims tuples.
+
+# Examples
+```jldoctest
+julia> dims = 2 => 3
+julia> weight_mat = init_rand_weight(dims)
+julia> size(weight_mat)
+(2, 3)
+julia> @assert all(-1 .<= w .<= 1 for w in weight_mats)
+```
+"""
+init_rand_weight::Function = normalize_neg1_to_1 ∘ splat(rand)

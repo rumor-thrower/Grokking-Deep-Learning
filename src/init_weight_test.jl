@@ -13,4 +13,11 @@ include("init_weight.jl")
         @test normalized_M == [-1.0 0.0; 1.0 -0.5]
     end
 
+    @testset "init_rand_weight" begin
+        dims = 2 => 3
+        weight_mat = init_rand_weight(dims)
+        @test size(weight_mat) == (2, 3)
+        @test all(-1 .<= w .<= 1 for w in weight_mat)
+    end
+
 end # @testset "Weight Initialization Tests"
