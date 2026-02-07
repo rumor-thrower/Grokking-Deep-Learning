@@ -24,6 +24,17 @@ const (train_images, train_labels) = load_data(Val(:test))
 
 
 # ╔═╡ bc60ca95-08c7-4bba-a1e1-bbffe07c7267
+# Initalize weight matrices randomly
+weight_mats::Vector{Matrix{Float64}} = let
+	hidden_size = 40
+	pixels_per_image = 28^2
+	num_labels = 10
+	
+	init_rand_weight.([
+		3 => hidden_size,
+		hidden_size => 1
+	])
+end
 
 
 # ╔═╡ f247e919-d416-43d6-953c-afc72721dec6
