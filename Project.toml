@@ -2,3 +2,9 @@ name = "Grok"
 uuid = "741f94ce-7c44-4664-a236-7dbfa09f3eda"
 version = "0.1.0"
 authors = ["rumor-thrower <87070008+rumor-thrower@users.noreply.github.com>"]
+
+[deps]
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+
+[compat]
+Random = "1.11.0"
