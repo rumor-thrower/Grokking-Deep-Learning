@@ -9,6 +9,7 @@ begin
     using MLDatasets: MNIST # for loading the MNIST dataset
 
     include("load_mnist_data.jl")
+	include("init_weight.jl")
 end
 
 # ╔═╡ cb6e73d0-032f-11f1-bb3a-73e95d8e819e
