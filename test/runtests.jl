@@ -9,6 +9,7 @@ using Test
 
 @testset "Book 'Grokking Deep Learning' utility library `Grok`" begin
     testfiles = [
+        "load_mnist_data_test.jl",
         # Add test files above
     ]
 
