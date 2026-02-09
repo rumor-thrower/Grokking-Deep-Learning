@@ -10,6 +10,7 @@ using Test
 @testset "Book 'Grokking Deep Learning' utility library `Grok`" begin
     testfiles = [
         "relu_test.jl",
+        "propagate/fore/forward_propagate_test.jl",
         # Add test files above
     ]
 
