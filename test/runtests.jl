@@ -11,6 +11,8 @@ using Test
     testfiles = [
         "load_mnist_data_test.jl",
         "init_weight_test.jl",
+        "relu_test.jl",
+        "propagate/fore/forward_propagate_test.jl",
         # Add test files above
     ]
 
