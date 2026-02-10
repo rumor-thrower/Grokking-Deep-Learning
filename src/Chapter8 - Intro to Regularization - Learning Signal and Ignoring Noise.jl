@@ -21,7 +21,11 @@ md"""
 const (train_images, train_labels) = load_data(Val(:test))
 
 # ╔═╡ 8824f8c9-9ff6-459c-af5f-877519a54748
-
+# Set hyperparameters
+begin
+	alpha = 5e-3
+	iters = 350
+end
 
 # ╔═╡ bc60ca95-08c7-4bba-a1e1-bbffe07c7267
 # Initialize weights at random for the 3-layer network
